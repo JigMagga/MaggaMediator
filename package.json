@@ -1,0 +1,41 @@
+{
+  "name": "MaggaMediator",
+  "description": "The MaggaMediator is the heart of JigMagga. Its job is to provide an communication layer.",
+  "version": "0.0.1",
+  "main": "maggaMediator.js",
+  "author": {
+    "name": "yd. yourdelivery GmbH",
+    "email": "jaroslav.popov@takeaway.com",
+    "web": "http://www.lieferando.de/"
+  },
+  "contributors": [
+    {
+      "name": "Toni Meuschke",
+      "email": "meuschke@takeaway.com",
+      "url": "https://github.com/meuschke"
+    },
+    {
+      "name": "Jaroslav Popov",
+      "email": "jaroslav.popov@takeaway.com",
+      "url": "https://github.com/chilicoder"
+    },
+    {
+      "name": "Akrem Abayed",
+      "email": "akrem.abayed@takeaway.com"
+    }
+  ],
+  "licenses": [
+    {
+      "type": "LPGL",
+      "url": "http://www.gnu.org/licenses/lgpl.html"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JigMagga/MaggaMediator"
+  },
+  "dependencies": {
+    "mediator-js": "https://github.com/ajacksified/Mediator.js/archive/v0.9.9.tar.gz"
+  },
+  "devDependencies": {}
+}

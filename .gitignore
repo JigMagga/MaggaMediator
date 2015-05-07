@@ -1,0 +1,5 @@
+/.idea/
+/node_modules/
+npm-debug.log
+maggaMediator.prod.js
+maggaMediator.standalone.js

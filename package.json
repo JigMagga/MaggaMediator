@@ -37,5 +37,7 @@
   "dependencies": {
     "mediator-js": "https://github.com/ajacksified/Mediator.js/archive/v0.9.9.tar.gz"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "qunitjs": "^1.18.0"
+  }
 }

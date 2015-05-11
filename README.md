@@ -17,13 +17,12 @@ mediator = new MaggaMediator();
 
 ## Tests
 
-QUnit is used for testing. Put your tests in `tests/tests.js`  Use browserify to create test file.
+Testem + Mocha + Chai are used for testing. Put your tests in `test/<NAMESPACE>` folder with `*.test.js` extension. To run tests use
 
 ```
-browserify tests/tests.js -o maggaMediator.tests.js
+npm test
 ```
 
-Then open tests/tests.html file in your browser
-
+Tests now runs in node and chrome.
 
 

@@ -5,8 +5,13 @@
   "main": "maggaMediator.js",
   "author": {
     "name": "yd. yourdelivery GmbH",
-    "email": "jaroslav.popov@takeaway.com",
     "web": "http://www.lieferando.de/"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/testem"
   },
   "contributors": [
     {
@@ -38,6 +43,9 @@
     "mediator-js": "https://github.com/ajacksified/Mediator.js/archive/v0.9.9.tar.gz"
   },
   "devDependencies": {
-    "qunitjs": "^1.18.0"
+    "browserify": "^10.1.3",
+    "chai": "^2.3.0",
+    "mocha": "^2.2.4",
+    "testem": "^0.8.3"
   }
 }

@@ -1,0 +1,21 @@
+{
+  "framework": "mocha+chai",
+  "serve_files": [ "test/browserified.js"],
+  "src_files": [
+    "src/*",
+    "test/setup.js",
+    "test/*.test.js"
+  ],
+  "launchers": {
+    "node": {
+      "command": "NODE_PATH=./src ./node_modules/.bin/mocha -r test/setup.js -R tap test/**/*.test.js",
+      "protocol": "tap"
+    }
+  },
+  "before_tests": "NODE_PATH=./src ./node_modules/.bin/browserify test/setup.js test/**/*.test.js -o test/browserified.js ",
+  "after_tests": "rm test/browserified.js",
+  "launch_in_dev": [
+    "chrome",
+    "node"
+  ]
+}

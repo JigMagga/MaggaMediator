@@ -51,8 +51,6 @@
     MaggaMediator.prototype.unbind = function(){};
     // temporary stubs for canjs.map compatibility
 
-
-
     /**
      * Subscribe "subscriber" to a queue using a callback
      * @param {string} queueName - the queue name
@@ -116,6 +114,21 @@
         if (self[queueName] === undefined) {
             self.attr(queueName, {"subscribers": []});
             self._addmonitorQueue(queueName);
+        }
+        else {
+            // Check if subscribers is an Array
+            var subscribers = self.attr(queueName).subscribers;
+            if (Object.prototype.toString.call(subscribers) !== '[object Array]') {
+                throw new Error("Subscribers property of queue mast be an Array.");
+            }
+            // IE: 9+
+            subscribers.forEach(function(cb/*,ind,arr*/){
+                if (typeof cb !== "function") {
+                    throw new Error("Subscriber is not a function.");
+                }
+                cb.call(self,value);
+            });
+
         }
         //self[queueName].attr("publisher", publisher);
 
@@ -190,7 +203,7 @@
      * @private
      */
     MaggaMediator.prototype._callbackQueue = function(queueName, cb) {
-        cb(this.attr(queueName).value, queueName, this.attr(queueName).publisher, this.attr(queueName).time, this.attr(queueName).subscribers.attr());
+        //cb(this.attr(queueName).value, queueName, this.attr(queueName).publisher, this.attr(queueName).time, this.attr(queueName).subscribers.attr());
     };
 
     /**

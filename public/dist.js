@@ -3,57 +3,87 @@ MaggaMediator = (function () {
     console.log("gladitor new instance");
 });
 
-var c11nType = null;
+MaggaMediator.prototype.connect= function(data,connections){
+    var conn = data.type;
 
-MaggaMediator.prototype.connect= function(data){
-    c11nType = data.c11nType;
-    c11nType.init(data);
-};
-
-MaggaMediator.prototype.subscribe= function(event){
-    c11nType.subscribe(event);
-};
-
-MaggaMediator.prototype.publish= function(event){
-    c11nType.publish(event);
+    if(typeof window !== 'undefined'){
+        //browser
+        conn.init({host:data.host,port:data.port,path:data.path},connections);
+    }else{
+        //server
+        return conn.init({host:data.host,port:data.port,path:data.path},connections);
+    }
 };
 
 module.exports = MaggaMediator;
 },{}],2:[function(require,module,exports){
 "use strict";
 
-module.exports = function() {
-    var sock = null;
+var sock;
+
+var init = function(mediator){
+    var path = "http://"+mediator.host+":"+mediator.port+mediator.path;
+    sock = new SockJS(path);
+    sock.onopen = function() {
+        //console.log("sockjs connection is open");
+        subscribe();
+        //sock.send({action:'subscribe',roomid:'1'});
+    };
+    sock.onmessage = function(e) {
+        console.log('message', e.data);
+    };
+    console.log(sock);
+};
+var subscribe = function(){
+    sock.send(JSON.stringify({action:'subscribe',roomid:'123'}));
+};
+var publish= function (msg) {
+    sock.send(JSON.stringify({action:'publish',roomid:'123'}));
+};
+
+var sockClientPlugin = function(server){
+    sock = null;
     return {
-        init: function (data) {
-            var path = data.host+":"+data.port+data.path;
-            sock = new SockJS("http://localhost:8080/ws");
-            console.log(sock);
-            sock.onopen = function() {
-                console.log("opened");
-                sock.send("foo");
-            };
-        },
-        subscribe: function (msg) {
-            console.log(sock);
-            sock.send("bhui");
-        },
-        publish: function (msg) {
-            sock.send(JSON.stringify(msg));
-        }
+        init: init,
+        subscribe: subscribe,
+        publish: publish,
+        unsubscribe: unsubscribe,
+        error : error
     }
 };
 
+module.exports = sockClientPlugin;
 },{}],3:[function(require,module,exports){
 "use strict";
 
+
 var Mediator = require("./../api/MaggaMediator");
-var sockJSpluguin = require("./../plugins/sockjs");
+var sockjsClientPlugin = require("./../plugins/sockjs")();
+
+console.log(sockjsClientPlugin);
+
 var m = new Mediator();
+m.connect({type: sockjsClientPlugin,host: "localhost",port: 8080,path: "/ws"});
 
-var s = new sockJSpluguin;
 
-m.connect({c11nType: s,host: "localhost",port: 8080,path: "/ws"});
-m.subscribe({event:'subscribe'});
-m.publish({event:'publish'});
+
+
+
+
+/*
+=================================================================
+ */
+function subscribe() {
+    console.log("subscribe");
+    sockjsClientPlugin.subscribe({event:'subscribe'});
+}
+function publish() {
+    sockjsClientPlugin.publish({event:'publish'});
+}
+
+var sub = document.getElementById('subscribe');
+sub.addEventListener('click', subscribe);
+
+var pub = document.getElementById('publish');
+pub.addEventListener('click', publish);
 },{"./../api/MaggaMediator":1,"./../plugins/sockjs":2}]},{},[3]);

@@ -39,5 +39,11 @@
     "mediator-js": "https://github.com/ajacksified/Mediator.js/archive/v0.9.9.tar.gz",
     "serve-static": "^1.9.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "grunt": "^0.4.5",
+    "grunt-connect": "^0.2.0",
+    "mocha": "^2.2.4",
+    "supertest": "^0.15.0"
+  }
 }

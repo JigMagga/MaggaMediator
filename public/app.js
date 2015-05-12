@@ -1,11 +1,32 @@
 "use strict";
 
+
 var Mediator = require("./../api/MaggaMediator");
-var sockJSpluguin = require("./../plugins/sockjs");
+var sockjsClientPlugin = require("./../plugins/sockjs")();
+
+console.log(sockjsClientPlugin);
+
 var m = new Mediator();
+m.connect({type: sockjsClientPlugin,host: "localhost",port: 8080,path: "/ws"});
 
-var s = new sockJSpluguin;
 
-m.connect({c11nType: s,host: "localhost",port: 8080,path: "/ws"});
-m.subscribe({event:'subscribe'});
-m.publish({event:'publish'});
+
+
+
+
+/*
+=================================================================
+ */
+function subscribe() {
+    console.log("subscribe");
+    sockjsClientPlugin.subscribe({event:'subscribe'});
+}
+function publish() {
+    sockjsClientPlugin.publish({event:'publish'});
+}
+
+var sub = document.getElementById('subscribe');
+sub.addEventListener('click', subscribe);
+
+var pub = document.getElementById('publish');
+pub.addEventListener('click', publish);

@@ -90,14 +90,22 @@
      * @param {string} cb - the cb
      */
     MaggaMediator.prototype.unsubscribe = function (queueName, cb) {
-        if (this.constructor.handlers[cb] && this[queueName]) {
-            //this[queueName].unbind("time", this.constructor.handlers[cb]);
+        if (this.constructor.handlers[cb]) {
             delete this.constructor.handlers[cb];
-        } else if (!this.constructor.handlers[cb]) {
-            throw new Error("No handler found for this cb");
+            if (this[queueName] !== undefined && this[queueName].subscribers !== undefined) {
+                // delete cb from subscribers
+                var subscribers = this[queueName].subscribers,
+                    idxOf = subscribers.indexOf(cb);
+                while (idxOf !== -1) {
+                    subscribers.splice(idxOf, 1);
+                    idxOf = subscribers.indexOf(cb);
+                }
+            }
+
         } else {
-            delete this.constructor.handlers[cb];
+            throw new Error("No handler found for this cb");
         }
+
     };
 
     /**

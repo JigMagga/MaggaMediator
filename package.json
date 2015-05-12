@@ -40,7 +40,6 @@
     "url": "https://github.com/JigMagga/MaggaMediator"
   },
   "dependencies": {
-    "rx": "^2.5.2"
   },
   "devDependencies": {
     "browserify": "^10.1.3",

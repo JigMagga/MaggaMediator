@@ -40,7 +40,8 @@
     "url": "https://github.com/JigMagga/MaggaMediator"
   },
   "dependencies": {
-    "mediator-js": "https://github.com/ajacksified/Mediator.js/archive/v0.9.9.tar.gz"
+    "mediator-js": "https://github.com/ajacksified/Mediator.js/archive/v0.9.9.tar.gz",
+    "rx": "^2.5.2"
   },
   "devDependencies": {
     "browserify": "^10.1.3",

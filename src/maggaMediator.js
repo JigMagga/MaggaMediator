@@ -116,8 +116,8 @@
             self._addmonitorQueue(queueName);
         }
         else {
-            // Check if subscribers is an Array
             var subscribers = self.attr(queueName).subscribers;
+            // Check if subscribers is an Array
             if (Object.prototype.toString.call(subscribers) !== '[object Array]') {
                 throw new Error("Subscribers property of queue mast be an Array.");
             }

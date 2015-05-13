@@ -21,16 +21,32 @@
     'use strict';
     //var Mediator = require('mediator-js').Mediator;
 
+    var util = require('util');
+    var EventEmitter = require('events').EventEmitter;
+
+
     function MaggaMediator(configObj){
         //Mediator.apply(this,arguments);
         this._config = {};
         this.config(configObj || {});
     }
 
+    // extend MaggaMediator with EventEmitter
+    util.inherits(MaggaMediator, EventEmitter);
+
+    // TODO you do not need prototype.constructor here you can assign directly to MaggaMediator
     MaggaMediator.prototype.constructor = MaggaMediator;
     MaggaMediator.prototype.constructor.handlers = {};
     MaggaMediator.prototype.constructor.monitorMethod = undefined;
     MaggaMediator.prototype.constructor.monitorCallback = [];
+
+    /**
+     * Plugin API to register a plugin on the mediator
+     * @type {[type]}
+     */
+    MaggaMediator.prototype.plugin = require("plugin/plugin.js");
+
+
 
 
     // temporary stubs for canjs.map compatibility

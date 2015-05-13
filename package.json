@@ -11,7 +11,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "./node_modules/.bin/testem"
+    "test": "./node_modules/.bin/testem ci"
   },
   "contributors": [
     {

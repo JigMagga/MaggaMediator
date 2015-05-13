@@ -17,5 +17,8 @@
   "launch_in_dev": [
     "chrome",
     "node"
+  ],
+  "launch_in_ci": [
+    "node"
   ]
 }

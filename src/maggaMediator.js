@@ -19,7 +19,12 @@
     //console.log('maggaMediator this', global, factory)
 }(this, function() {
     'use strict';
-    //var Mediator = require('mediator-js').Mediator;
+
+    var DEFAULT_CONFIG = {
+        "internal": ['simple','monitoring']
+        //,external: [{"transport":"socks","address":"localhost","port":"99999"}]
+    };
+
 
     var util = require('util');
     var EventEmitter = require('events').EventEmitter;
@@ -28,17 +33,43 @@
     function MaggaMediator(configObj){
         //Mediator.apply(this,arguments);
         this._config = {};
-        this.config(configObj || {});
+        this.config(configObj || DEFAULT_CONFIG);
+        this.init();
     }
 
     // extend MaggaMediator with EventEmitter
     util.inherits(MaggaMediator, EventEmitter);
 
-    MaggaMediator.prototype.constructor = MaggaMediator;
+    /**
+     * Plugin API to register a plugin on the mediator
+     * @type {[type]}
+     */
+    MaggaMediator.prototype.plugin = require("plugin/plugin.js");
+
+    MaggaMediator.prototype.init = function () {
+        var self = this;
+        var config = self._config;
+        var moduleFileName,plugin;
+        if (Object.prototype.toString.call(config.internal) !== '[object Array]') {
+            throw new Error("config.internal is not an Array.");
+        }
+
+        //config.internal.forEach(function(value){
+        //    moduleFileName = '../plugins/'+value+'.js';
+        //    console.log(moduleFileName);
+        //    plugin = require(moduleFileName);
+        //    self.plugin(plugin);
+        //});
+        // now dynamically generated names doesnt work in browserify. Hardcoded for now. But
+        // TODO: Implement in a way that works in browserify.
+        self.plugin(require('../plugins/simple.js'));
+        self.plugin(require('../plugins/monitoring.js'));
+
+    };
 
 
     // TODO: Functionality for monitoring. In progress.
-
+    // with plugins for internal communications maybe we could get rid of it
     MaggaMediator.prototype._handlers = {};
     MaggaMediator.prototype._addHandler = function(cb){
         var self = this;
@@ -51,15 +82,6 @@
     };
     MaggaMediator.prototype.monitorMethod = undefined;
     MaggaMediator.prototype.monitorCallback = [];
-
-    /**
-     * Plugin API to register a plugin on the mediator
-     * @type {[type]}
-     */
-    MaggaMediator.prototype.plugin = require("plugin/plugin.js");
-
-
-
 
     // temporary stubs for canjs.map compatibility
     // TODO: remove methods after refactor of subscribe etc.
@@ -86,28 +108,7 @@
      * @returns {*}
      */
     MaggaMediator.prototype.subscribe = function (queueName, cb) {
-        var self = this;
-        if (typeof queueName !== "string") {
-            throw new Error("Queue name must be string");
-        }
-
-        // If we have this queue then subscribe
-        if (typeof self.attr(queueName) !== "undefined") {
-            if (typeof cb === "function") {
-                self._callbackQueue(queueName, cb);
-            }
-            self[queueName].subscribers.push(cb);
-        } else {
-            // create new queue
-            self.attr(queueName, {subscribers: [cb]});
-            self._addmonitorQueue(queueName);
-        }
-
-        if (typeof cb === "function") {
-            self._addHandler(cb);
-            //self[queueName].bind("time", self._handlers[cb]);
-        }
-        return self[queueName];
+        this.emit('subscribe',queueName, cb);
     };
 
     /**
@@ -116,24 +117,7 @@
      * @param {string} cb - the cb
      */
     MaggaMediator.prototype.unsubscribe = function (queueName, cb) {
-        var self = this;
-        // Remember that _handlers property belongs to the prototype
-        if (self._handlers[cb]) {
-            self._removeHandler(cb);
-            if (this[queueName] !== undefined && this[queueName].subscribers !== undefined) {
-                // delete cb from subscribers
-                var subscribers = this[queueName].subscribers,
-                    idxOf = subscribers.indexOf(cb);
-                while (idxOf !== -1) {
-                    subscribers.splice(idxOf, 1);
-                    idxOf = subscribers.indexOf(cb);
-                }
-            }
-
-        } else {
-            throw new Error("No handler found for this cb");
-        }
-
+        this.emit('unsubscribe',queueName, cb);
     };
 
     /**
@@ -142,35 +126,7 @@
      * @param value - a value of any type
      */
     MaggaMediator.prototype.publish = function (queueName, value) {
-        var self = this;
-        if (typeof queueName !== "string") {
-            throw new Error("Queue name must be string");
-        }
-
-        if (self[queueName] === undefined) {
-            self.attr(queueName, {"subscribers": []});
-            self._addmonitorQueue(queueName);
-        }
-        else {
-            var subscribers = self.attr(queueName).subscribers;
-            // Check if subscribers is an Array
-            if (Object.prototype.toString.call(subscribers) !== '[object Array]') {
-                throw new Error("Subscribers property of queue mast be an Array.");
-            }
-            // IE: 9+
-            subscribers.forEach(function(cb/*,ind,arr*/){
-                if (typeof cb !== "function") {
-                    throw new Error("Subscriber is not a function.");
-                }
-                cb.call(self,value);
-            });
-
-        }
-        //self[queueName].attr("publisher", publisher);
-
-        // TODO: this is how events were exposed. Reimplement
-        //self[queueName].attr("value", value);
-        //self[queueName].attr("time", new Date());
+        this.emit('publish',queueName, value);
     };
 
     /**
@@ -277,6 +233,8 @@
     }
 
     //console.log('MaggaMediator factory',MaggaMediator);
+
+    //MaggaMediator.prototype.constructor = MaggaMediator;
     return MaggaMediator;
 }));
 

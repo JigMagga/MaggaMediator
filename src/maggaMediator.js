@@ -34,11 +34,23 @@
     // extend MaggaMediator with EventEmitter
     util.inherits(MaggaMediator, EventEmitter);
 
-    // TODO you do not need prototype.constructor here you can assign directly to MaggaMediator
     MaggaMediator.prototype.constructor = MaggaMediator;
-    MaggaMediator.prototype.constructor.handlers = {};
-    MaggaMediator.prototype.constructor.monitorMethod = undefined;
-    MaggaMediator.prototype.constructor.monitorCallback = [];
+
+
+    // TODO: Functionality for monitoring. In progress.
+
+    MaggaMediator.prototype._handlers = {};
+    MaggaMediator.prototype._addHandler = function(cb){
+        var self = this;
+        this._handlers[cb] = function (ev, val) {
+            self._callbackQueue(queueName, handler);
+        };
+    };
+    MaggaMediator.prototype._removeHandler = function(cb){
+        delete MaggaMediator.prototype._handlers[cb];
+    };
+    MaggaMediator.prototype.monitorMethod = undefined;
+    MaggaMediator.prototype.monitorCallback = [];
 
     /**
      * Plugin API to register a plugin on the mediator
@@ -92,10 +104,8 @@
         }
 
         if (typeof cb === "function") {
-            self.constructor.handlers[cb] = function (ev, val) {
-                self._callbackQueue(queueName, cb);
-            };
-            //self[queueName].bind("time", self.constructor.handlers[cb]);
+            self._addHandler(cb);
+            //self[queueName].bind("time", self._handlers[cb]);
         }
         return self[queueName];
     };
@@ -106,8 +116,10 @@
      * @param {string} cb - the cb
      */
     MaggaMediator.prototype.unsubscribe = function (queueName, cb) {
-        if (this.constructor.handlers[cb]) {
-            delete this.constructor.handlers[cb];
+        var self = this;
+        // Remember that _handlers property belongs to the prototype
+        if (self._handlers[cb]) {
+            self._removeHandler(cb);
             if (this[queueName] !== undefined && this[queueName].subscribers !== undefined) {
                 // delete cb from subscribers
                 var subscribers = this[queueName].subscribers,

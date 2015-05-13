@@ -10,7 +10,7 @@ describe('Plugin', function() {
     // Assign config
     it('should call plugin init',function(){
       maggaMediator.plugin(myPlugin);
-      chai.expect(callbackInit.called).to.be.true;
+      expect(callbackInit.called).to.be.true;
     });
 
 })

@@ -1,5 +1,5 @@
 {
-  "framework": "mocha+chai",
+  "framework": "mocha",
   "serve_files": [ "test/browserified.js"],
   "src_files": [
     "src/*",

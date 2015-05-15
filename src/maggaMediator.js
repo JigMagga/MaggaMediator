@@ -46,7 +46,7 @@
      * Plugin API to register a plugin on the mediator
      * @type {[type]}
      */
-    MaggaMediator.prototype.plugin = require("plugin/plugin.js");
+    MaggaMediator.prototype.plugin = require("./plugin/plugin.js");
 
     MaggaMediator.prototype.init = function () {
         var self = this;
@@ -146,4 +146,7 @@
     return MaggaMediator;
 }));
 
-
+var MaggaMediator = require('maggaMediator');
+var maggaMediator = new MaggaMediator();
+var sockjs = require('./../plugins/sockjs/sockjs')();
+maggaMediator.plugin(sockjs);

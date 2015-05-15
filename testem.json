@@ -15,10 +15,13 @@
   "before_tests": "NODE_PATH=./src ./node_modules/.bin/browserify test/setup.js test/**/*.test.js -o test/browserified.js ",
   "after_tests": "rm test/browserified.js",
   "launch_in_dev": [
-    "chrome",
-    "node"
+    "node",
+    "firefox",
+    "chrome"
   ],
   "launch_in_ci": [
-    "node"
+    "node",
+    "firefox",
+    "chrome"
   ]
 }

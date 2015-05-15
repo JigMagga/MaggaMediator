@@ -16,6 +16,10 @@ module.exports = function plugin(plugin){
 		this.on("subscribe", plugin.subscribe);
 	}
 
+	if(typeof plugin.unsubscribe === "function"){
+		this.on("unsubscribe", plugin.unsubscribe);
+	}
+
 	// TODO unsubscribe, error, warning
 	// TODO implement event emit in mediator
 

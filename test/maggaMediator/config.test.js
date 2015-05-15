@@ -1,6 +1,6 @@
-var MaggaMediator = require('maggaMediator.js');
+var MaggaMediator = require('./../../src/maggaMediator');
 
-describe('Create', function() {
+describe.skip('Create', function() {
     var maggaMediator = new MaggaMediator();
     describe('maggaMediator exists', function() {
         it('should mediator exist',function(){
@@ -9,7 +9,7 @@ describe('Create', function() {
     })
 })
 
-describe('Config', function() {
+describe.skip('Config', function() {
     var maggaMediator = new MaggaMediator();
 
     // Assign config
@@ -49,5 +49,4 @@ describe('Config', function() {
 //    assert.equal(mediatorListner[1] ,"Message two","Message two check");
 //
 //});
-
 

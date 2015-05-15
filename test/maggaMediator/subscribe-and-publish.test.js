@@ -1,6 +1,6 @@
-var MaggaMediator = require('maggaMediator.js');
+var MaggaMediator = require('./../../src/maggaMediator');
 
-describe('Create.', function() {
+describe.skip('Create.', function() {
     var maggaMediator = new MaggaMediator();
     describe('maggaMediator exists', function() {
         it('should mediator exist',function(){
@@ -9,7 +9,7 @@ describe('Create.', function() {
     })
 });
 
-describe('Subscribe and publish.', function() {
+describe.skip('Subscribe and publish.', function() {
     var maggaMediator = new MaggaMediator();
     var CHANNEL_NAME_ONE = 'channel:one',
         CHANNEL_NAME_TWO = 'channel:two',

@@ -1,22 +1,24 @@
 (function(global, factory) {
     'use strict';
+    var consoleMsg;
     if (typeof define === 'function' && define.amd) {
-        console.log('amd case');
+        consoleMsg  = 'amd case';
+
         // AMD
         define('magga-mediator', [], function() {
             global.MaggaMediator = factory();
             return global.MaggaMediator;
         });
     } else if (typeof module !== 'undefined' && module.exports) {
-        console.log('module object case');
+        consoleMsg  = 'module object case';
         // browserify and npm
         module.exports = factory();
     } else {
         // Browser global
-        console.log('global case');
+        consoleMsg  = 'global case';
         global.MaggaMediator = factory();
     }
-    //console.log('maggaMediator this', global, factory)
+    console.log(consoleMsg);
 }(this, function() {
     'use strict';
 

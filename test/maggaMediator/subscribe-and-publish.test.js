@@ -30,7 +30,9 @@ describe('Subscribe and publish.', function() {
             MESSAGE_ONE = 'Message one',
             MESSAGE_TWO = 'Message two',
             mediatorListnerOne = [],
-            callbackOne = function(msg){ mediatorListnerOne.push(msg)};
+            callbackOne = function(msg){
+                mediatorListnerOne.push(msg)
+            };
         it('should subscribe and publish to channel successfully',function(){
             maggaMediator.subscribe(CHANNEL_NAME_ONE, callbackOne);
             maggaMediator.publish(CHANNEL_NAME_ONE, MESSAGE_ONE);
@@ -48,28 +50,28 @@ describe('Subscribe and publish.', function() {
             MESSAGE_ONE = 'Message one',
             MESSAGE_TWO = 'Message two',
             mediatorListnerOne = [],
-            mediatorListnerTwo = [];
+            mediatorListnerTwo = [],
             callbackOne = function(msg){ mediatorListnerOne.push(msg)};
         it('should subscribe and publish to different channels successfully',function(){
             maggaMediator.subscribe(CHANNEL_NAME_ONE, callbackOne);
             maggaMediator.subscribe(CHANNEL_NAME_TWO, function(msg){ mediatorListnerTwo.push(msg)});
             maggaMediator.publish(CHANNEL_NAME_ONE, MESSAGE_ONE);
             maggaMediator.publish(CHANNEL_NAME_TWO, MESSAGE_TWO);
-            mediatorListnerOne.should.have.length(1);
-            mediatorListnerTwo.should.have.length(1);
+            expect(mediatorListnerOne).to.have.length(1);
+            expect(mediatorListnerTwo).to.have.length(1);
             assert.equal(mediatorListnerOne[0] ,MESSAGE_ONE,"Message one check");
             assert.equal(mediatorListnerTwo[0] ,MESSAGE_TWO,"Message two check");
         });
         it('should unsubscribe from channel successfully',function(){
-            expect(maggaMediator[CHANNEL_NAME_ONE]).to.have.property('subscribers').with.property('length');
-            var subsLength = maggaMediator[CHANNEL_NAME_ONE].subscribers.length;
+            expect(mediatorListnerOne).to.have.length(1);
             maggaMediator.unsubscribe(CHANNEL_NAME_ONE, callbackOne);
-            maggaMediator[CHANNEL_NAME_ONE].subscribers.should.have.length(subsLength-1);
+            maggaMediator.publish(CHANNEL_NAME_ONE, MESSAGE_ONE);
+            expect(mediatorListnerOne).to.have.length(1);
         });
 
     });
-
 });
+
 
 
 

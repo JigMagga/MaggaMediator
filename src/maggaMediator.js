@@ -51,7 +51,6 @@
     MaggaMediator.prototype.init = function () {
         var self = this;
         var config = self._config;
-        var moduleFileName,plugin;
         if (Object.prototype.toString.call(config.internal) !== '[object Array]') {
             throw new Error("config.internal is not an Array.");
         }
@@ -74,6 +73,8 @@
                     self.plugin(require('../plugins/monitoring.js')); break;
                 case 'sockjs':
                     self.plugin(require('../plugins/sockjs/sockjs.js')); break;
+                case 'baconjs':
+                    self.plugin(require('../plugins/baconjs.js')); break;
             }
         });
 

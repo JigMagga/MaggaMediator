@@ -136,7 +136,7 @@ module.exports = {
         // })
     },
     subscribe: function (queueName, cb) {
-        console.log('subscribe ',queueName,cb,this);
+        console.log('Monitor subscribe ',queueName,cb,this);
         // If we have this queue then subscribe
         var self = this.monitor;
         if (typeof self.attr(queueName) !== "undefined") {
@@ -154,7 +154,7 @@ module.exports = {
 
     },
     unsubscribe: function (queueName, cb) {
-        console.log('unsubscribe ',queueName,cb,this);
+        console.log('Monitor unsubscribe ',queueName,cb,this);
         var self = this.monitor;
 
         // Remember that _handlers property belongs to the monitor
@@ -166,7 +166,7 @@ module.exports = {
 
     },
     publish: function(queueName, value){
-        console.log('publish ', queueName,value,this);
+        console.log('Monitor publish ', queueName,value,this);
         var self = this.monitor;
 
         //if (self[queueName] === undefined) {

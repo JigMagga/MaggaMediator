@@ -1,4 +1,4 @@
-var MaggaMediator = require('./../../src/maggaMediator');
+var MaggaMediator = require('maggaMediator.js');
 
 describe.skip('Create', function() {
     var maggaMediator = new MaggaMediator();

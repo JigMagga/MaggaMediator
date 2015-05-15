@@ -41,7 +41,7 @@
     "url": "https://github.com/JigMagga/MaggaMediator"
   },
   "dependencies": {
-    "baconjs": "^0.7.58"
+    "baconjs": "^0.7.58",
     "sockjs": "^0.3.15",
     "sockjs-client": "^1.0.0"
   },

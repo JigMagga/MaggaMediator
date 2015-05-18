@@ -34,6 +34,9 @@ module.exports = function loadPlugins(pluginList) {
       case 'baconjs':
         self.plugin(require('../../plugins/baconjs.js'));
         break;
+      case 'eventNamesSimple':
+        self.plugin(require('../../plugins/eventNamesSimple.js'));
+        break;
       default:
         throw Error("No plugin for "+value+" found");
     }

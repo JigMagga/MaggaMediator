@@ -66,6 +66,7 @@ var DEFAULT_CONFIG = {
    * @returns {*}
    */
   MaggaMediator.prototype.subscribe = function (eventName, cb) {
+    var eventNames, permisions, self;
     if (typeof eventName !== "string") {
       throw new Error("[MaggaMediator.subscribe] event name must be string");
     }
@@ -73,7 +74,25 @@ var DEFAULT_CONFIG = {
       throw new Error('[MaggaMediator.subscribe] Second argument must be a function');
 
     }
-    this.emit('subscribe', eventName, cb);
+
+    self = this;
+
+    // If we have a system of eventNames location then we use it.
+    // Otherwise we just wrap the name into the Array
+    if (typeof self.eventNames !== 'undefined') {
+      eventNames = self.eventNames.find(eventName);
+    }
+    else eventNames = [eventName];
+
+    // If we have a system of permissions then we use it.
+    if (typeof self.permissions !== 'undefined') {
+      // check permissions for all found names
+      // get EventNames we can subscribe
+    }
+
+    eventNames.forEach(function (eventNameItem) {
+      self.emit('subscribe', eventNameItem, cb);
+    })
   };
 
   /**
@@ -122,8 +141,3 @@ var DEFAULT_CONFIG = {
 
   return MaggaMediator;
 }));
-
-//var MaggaMediator = require('maggaMediator');
-//var maggaMediator = new MaggaMediator();
-//var sockjs = require('./../plugins/sockjs/sockjs')();
-//maggaMediator.plugin(sockjs);

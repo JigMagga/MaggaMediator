@@ -1,6 +1,6 @@
 var MaggaMediator = require('maggaMediator.js');
 
-describe.skip('Create', function() {
+describe('Create', function() {
     var maggaMediator = new MaggaMediator();
     describe('maggaMediator exists', function() {
         it('should mediator exist',function(){
@@ -9,7 +9,7 @@ describe.skip('Create', function() {
     })
 })
 
-describe.skip('Config', function() {
+describe('Config', function() {
     var maggaMediator = new MaggaMediator();
 
     // Assign config

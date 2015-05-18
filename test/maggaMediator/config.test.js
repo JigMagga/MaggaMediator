@@ -1,31 +1,33 @@
+'use strict';
+
 var MaggaMediator = require('maggaMediator.js');
 
-describe('Create', function() {
-    var maggaMediator = new MaggaMediator();
-    describe('maggaMediator exists', function() {
-        it('should mediator exist',function(){
-            should.exist(maggaMediator);
-        });
-    })
+describe('Create', function () {
+  var maggaMediator = new MaggaMediator();
+  describe('maggaMediator exists', function () {
+    it('should mediator exist', function () {
+      should.exist(maggaMediator);
+    });
+  })
 })
 
-describe('Config', function() {
-    var maggaMediator = new MaggaMediator();
+describe('Config', function () {
+  var maggaMediator = new MaggaMediator();
 
-    // Assign config
-    it('should assign config properly',function(){
-        maggaMediator.config({foo:'bar',baz:1});
-        assert.equal(maggaMediator.config().foo,'bar',"Check after assigning config #1");
-        assert.equal(maggaMediator.config().baz,1,"Check after assigning config #2");
-    });
-    //console.log('maggaMediator.config()',maggaMediator.config())
+  // Assign config
+  it('should assign config properly', function () {
+    maggaMediator.config({foo: 'bar', baz: 1});
+    assert.equal(maggaMediator.config().foo, 'bar', "Check after assigning config #1");
+    assert.equal(maggaMediator.config().baz, 1, "Check after assigning config #2");
+  });
+  //console.log('maggaMediator.config()',maggaMediator.config())
 
-    it('should extend config properly',function(){
-        maggaMediator.config({foo:'newBar',buz:'bar'});
-        assert.equal(maggaMediator.config().foo,'newBar',"Check after reassigning config. New value of existing key.");
-        assert.equal(maggaMediator.config().buz,'bar',"Check after reassigning config. New key.");
-        assert.equal(maggaMediator.config().baz,1,"Check after reassigning config old value which wasn't in new config.");
-    });
+  it('should extend config properly', function () {
+    maggaMediator.config({foo: 'newBar', buz: 'bar'});
+    assert.equal(maggaMediator.config().foo, 'newBar', "Check after reassigning config. New value of existing key.");
+    assert.equal(maggaMediator.config().buz, 'bar', "Check after reassigning config. New key.");
+    assert.equal(maggaMediator.config().baz, 1, "Check after reassigning config old value which wasn't in new config.");
+  });
 })
 
 

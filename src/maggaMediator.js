@@ -1,273 +1,152 @@
-(function (global, factory) {
-  'use strict';
-  if (typeof define === 'function' && define.amd) {
-    console.log('amd case');
-    // AMD
-    define('magga-mediator', [], function () {
-      global.MaggaMediator = factory();
-      return global.MaggaMediator;
-    });
-  } else if (typeof module !== 'undefined' && module.exports) {
-    console.log('module object case');
-    // browserify and npm
-    module.exports = factory();
-  } else {
-    // Browser global
-    console.log('global case');
-    global.MaggaMediator = factory();
-  }
-  //console.log('maggaMediator this', global, factory)
-}(this, function () {
-  'use strict';
-  //var Mediator = require('mediator-js').Mediator;
+(function(global, factory) {
+    'use strict';
+    var consoleMsg;
+    if (typeof define === 'function' && define.amd) {
+        consoleMsg  = 'amd case';
 
-  var util = require('util');
-  var EventEmitter = require('events').EventEmitter;
-
-
-  function MaggaMediator(configObj) {
-    //Mediator.apply(this,arguments);
-    this._config = {};
-    this.config(configObj || {});
-  }
-
-  // extend MaggaMediator with EventEmitter
-  util.inherits(MaggaMediator, EventEmitter);
-
-  // TODO you do not need prototype.constructor here you can assign directly to MaggaMediator
-  MaggaMediator.prototype.constructor = MaggaMediator;
-  MaggaMediator.prototype.constructor.handlers = {};
-  MaggaMediator.prototype.constructor.monitorMethod = undefined;
-  MaggaMediator.prototype.constructor.monitorCallback = [];
-
-  /**
-   * Plugin API to register a plugin on the mediator
-   * @type {[type]}
-   */
-  MaggaMediator.prototype.plugin = require("plugin/plugin.js");
-
-
-  // temporary stubs for canjs.map compatibility
-  // TODO: remove methods after refactor of subscribe etc.
-  MaggaMediator.prototype.attr = function attr(attribute, value) {
-    if (typeof attribute !== "string") {
-      throw new Error("attribute name must be string");
-    }
-    if (typeof value === 'undefined') {
-      return this[attribute];
-
-    }
-    else {
-      this[attribute] = value;
-    }
-  };
-  MaggaMediator.prototype.bind = function () {
-  };
-  MaggaMediator.prototype.unbind = function () {
-  };
-  // temporary stubs for canjs.map compatibility
-
-  /**
-   * Subscribe "subscriber" to a queue using a callback
-   * @param {string} queueName - the queue name
-   * @param {function} cb - the callback function
-   * @returns {*}
-   */
-  MaggaMediator.prototype.subscribe = function (queueName, cb) {
-    var self = this;
-    if (typeof queueName !== "string") {
-      throw new Error("Queue name must be string");
-    }
-
-    // If we have this queue then subscribe
-    if (typeof self.attr(queueName) !== "undefined") {
-      if (typeof cb === "function") {
-        self._callbackQueue(queueName, cb);
-      }
-      self[queueName].subscribers.push(cb);
+        // AMD
+        define('magga-mediator', [], function() {
+            global.MaggaMediator = factory();
+            return global.MaggaMediator;
+        });
+    } else if (typeof module !== 'undefined' && module.exports) {
+        consoleMsg  = 'module object case';
+        // browserify and npm
+        module.exports = factory();
     } else {
-      // create new queue
-      self.attr(queueName, {subscribers: [cb]});
-      self._addmonitorQueue(queueName);
+        // Browser global
+        consoleMsg  = 'global case';
+        global.MaggaMediator = factory();
+    }
+    console.log(consoleMsg);
+}(this, function() {
+    'use strict';
+
+    var DEFAULT_CONFIG = {
+        "internal": ['simple','monitoring']
+        //,external: [{"transport":"socks","address":"localhost","port":"99999"}]
+    };
+
+
+    var util = require('util');
+    var EventEmitter = require('events').EventEmitter;
+
+
+    function MaggaMediator(configObj){
+        //Mediator.apply(this,arguments);
+        this._config = {};
+        this.config(configObj || DEFAULT_CONFIG);
+        this.init();
     }
 
-    if (typeof cb === "function") {
-      self.constructor.handlers[cb] = function (ev, val) {
-        self._callbackQueue(queueName, cb);
-      };
-      //self[queueName].bind("time", self.constructor.handlers[cb]);
-    }
-    return self[queueName];
-  };
+    // extend MaggaMediator with EventEmitter
+    util.inherits(MaggaMediator, EventEmitter);
 
-  /**
-   * Unsubscribe "cb" from a queue
-   * @param {string} queueName - the queue name
-   * @param {string} cb - the cb
-   */
-  MaggaMediator.prototype.unsubscribe = function (queueName, cb) {
-    if (this.constructor.handlers[cb]) {
-      delete this.constructor.handlers[cb];
-      if (this[queueName] !== undefined && this[queueName].subscribers !== undefined) {
-        // delete cb from subscribers
-        var subscribers = this[queueName].subscribers,
-          idxOf = subscribers.indexOf(cb);
-        while (idxOf !== -1) {
-          subscribers.splice(idxOf, 1);
-          idxOf = subscribers.indexOf(cb);
+    /**
+     * Plugin API to register a plugin on the mediator
+     * @type {[type]}
+     */
+    MaggaMediator.prototype.plugin = require("./plugin/plugin.js");
+
+    MaggaMediator.prototype.init = function () {
+        var self = this;
+        var config = self._config;
+        if (Object.prototype.toString.call(config.internal) !== '[object Array]') {
+            throw new Error("config.internal is not an Array.");
         }
-      }
 
-    } else {
-      throw new Error("No handler found for this cb");
-    }
+        //config.internal.forEach(function(value){
+        //    moduleFileName = '../plugins/'+value+'.js';
+        //    console.log(moduleFileName);
+        //    plugin = require(moduleFileName);
+        //    self.plugin(plugin);
+        //});
 
-  };
+        // Did this because dynamically generated names doesnt work in browserify.
+        // See more https://github.com/substack/node-browserify/issues/377
 
-  /**
-   * Publish a value to a queue
-   * @param {string} queueName - the queue name
-   * @param value - a value of any type
-   */
-  MaggaMediator.prototype.publish = function (queueName, value) {
-    var self = this;
-    if (typeof queueName !== "string") {
-      throw new Error("Queue name must be string");
-    }
+        config.internal.forEach(function(value){
+            switch (value) {
+                case 'simple':
+                    self.plugin(require('../plugins/simple.js')); break;
+                case 'monitoring':
+                    self.plugin(require('../plugins/monitoring.js')); break;
+                case 'sockjs':
+                    self.plugin(require('../plugins/sockjs/sockjs.js')); break;
+                case 'baconjs':
+                    self.plugin(require('../plugins/baconjs.js')); break;
+            }
+        });
 
-    if (self[queueName] === undefined) {
-      self.attr(queueName, {"subscribers": []});
-      self._addmonitorQueue(queueName);
-    }
-    else {
-      var subscribers = self.attr(queueName).subscribers;
-      // Check if subscribers is an Array
-      if (Object.prototype.toString.call(subscribers) !== '[object Array]') {
-        throw new Error("Subscribers property of queue mast be an Array.");
-      }
-      // IE: 9+
-      subscribers.forEach(function (cb/*,ind,arr*/) {
+    };
+
+
+    /**
+     * Subscribe "subscriber" to a queue using a callback
+     * @param {string} queueName - the queue name
+     * @param {function} cb - the callback function
+     * @returns {*}
+     */
+    MaggaMediator.prototype.subscribe = function (queueName, cb) {
+        if (typeof queueName !== "string") {
+            throw new Error("[MaggaMediator.subscribe] Queue name must be string");
+        }
         if (typeof cb !== "function") {
-          throw new Error("Subscriber is not a function.");
+            throw new Error('[MaggaMediator.subscribe] Second argument must be a function');
+
         }
-        cb.call(self, value);
-      });
+        this.emit('subscribe',queueName, cb);
+    };
 
-    }
-    //self[queueName].attr("publisher", publisher);
+    /**
+     * Unsubscribe "cb" from a queue
+     * @param {string} queueName - the queue name
+     * @param {string} cb - the cb
+     */
+    MaggaMediator.prototype.unsubscribe = function (queueName, cb) {
+        this.emit('unsubscribe',queueName, cb);
+    };
 
-    // TODO: this is how events were exposed. Reimplement
-    //self[queueName].attr("value", value);
-    //self[queueName].attr("time", new Date());
-  };
-
-  /**
-   * Monitor all queues or one single queue. The vaules get sent to a callback function or are logged to the console
-   * @param {function|string} cb - the callback function or the queue name
-   */
-  MaggaMediator.prototype.monitor = function (cb) {
-    var self = this,
-      selfArr;
-    if (typeof cb === "string") {
-      //self[cb].bind("time", function () {
-      //    self._logQueue(cb);
-      //});
-    } else {
-      if (typeof cb === "function") {
-        self.constructor.monitorCallback.push(cb);
-        self.constructor.monitorMethod = "_callbackQueue";
-      } else {
-        self.constructor.monitorMethod = "_logQueue";
-      }
-      selfArr = self.__get();
-      for (var queueName in selfArr) {
-        if (selfArr.hasOwnProperty(queueName)) {
-          //self[queueName].bind("time", function () {
-          //    self[self.constructor.monitorMethod](queueName, self.constructor.monitorCallback);
-          //});
+    /**
+     * Publish a value to a queue
+     * @param {string} queueName - the queue name
+     * @param value - a value of any type
+     */
+    MaggaMediator.prototype.publish = function (queueName, value) {
+        if (typeof queueName !== "string") {
+            throw new Error("Queue name must be string");
         }
-      }
-    }
-  };
+        this.emit('publish',queueName, value);
+    };
 
-  /**
-   * Helper method to bind all eisting monitors to new queues
-   * @param {string} queueName - the queue name
-   * @private
-   */
-  MaggaMediator.prototype._addmonitorQueue = function (queueName) {
-    var self = this;
-    if (self.constructor.monitorMethod) {
-      //if (self.constructor.monitorCallback.length) {
-      //    self.constructor.monitorCallback.forEach(function(cb) {
-      //        self[queueName].bind("time", function () {
-      //            self[self.constructor.monitorMethod](queueName, cb);
-      //        });
-      //    });
-      //} else {
-      //    self[queueName].bind("time", function () {
-      //        self[self.constructor.monitorMethod](queueName);
-      //    });
-      //}
-    }
-  };
-
-  /**
-   * Get all queue names
-   * @returns {array}
-   */
-  MaggaMediator.prototype.getAllQueues = function () {
-    return can.Map.keys(this);
-  };
-
-  /**
-   * Writes all queue data to the callback funktion
-   * @param {string} queueName - the queue name
-   * @param {function} cb - the callback function
-   * @private
-   */
-  MaggaMediator.prototype._callbackQueue = function (queueName, cb) {
-    //cb(this.attr(queueName).value, queueName, this.attr(queueName).publisher, this.attr(queueName).time, this.attr(queueName).subscribers.attr());
-  };
-
-  /**
-   * Writes all queue data to the console
-   * @param {string} queueName - the queue name
-   * @param _cb - not used
-   * @private
-   */
-  MaggaMediator.prototype._logQueue = function (queueName, _cb) {
-    if (typeof console !== "undefined" && console.log) {
-      console.log("JM Mediator - Queue:", queueName, ", Value:", this.attr(queueName).value, ", Publisher:", this.attr(queueName).publisher, ", Time:", this.attr(queueName).time, ", Subscribers:", this.attr(queueName).subscribers.attr());
-    }
-  };
-  /**
-   * Extend MaggaMediator with config function.
-   * MaggaMediator.config() gives current config, calling with object will update it
-   * @param configObj
-   * @returns {{}|*}
-   */
-  MaggaMediator.prototype.config = function (configObj) {
-    if (arguments.length === 0) {
-      return this._config;
-    }
-    else {
-      if (typeof configObj !== 'object' || !(configObj instanceof Object)) {
-        throw new Error('Configuration must be an Object');
-      }
-
-      for (var key in configObj) {
-        if (Object.prototype.hasOwnProperty.call(configObj, key)) {
-          this._config[key] = configObj[key];
+    /**
+     * Extend MaggaMediator with config function.
+     * MaggaMediator.config() gives current config, calling with object will update it
+     * @param configObj
+     * @returns {{}|*}
+     */
+    MaggaMediator.prototype.config = function(configObj) {
+        if (arguments.length === 0) {
+            return this._config;
         }
-      }
-
-      return this._config;
+        else {
+            if (typeof configObj !== 'object' || !(configObj instanceof Object)) {
+                throw new Error("Configuration must be an Object");
+            }
+            for (var key in configObj) {
+                if (Object.prototype.hasOwnProperty.call(configObj, key)) {
+                    this._config[key] = configObj[key];
+                }
+            }
+            return this._config;
+        }
     }
-  };
 
-  //console.log('MaggaMediator factory',MaggaMediator);
-  return MaggaMediator;
+    //MaggaMediator.prototype.constructor = MaggaMediator;
+    return MaggaMediator;
 }));
 
-
+var MaggaMediator = require('maggaMediator');
+var maggaMediator = new MaggaMediator();
+var sockjs = require('./../plugins/sockjs/sockjs')();
+maggaMediator.plugin(sockjs);

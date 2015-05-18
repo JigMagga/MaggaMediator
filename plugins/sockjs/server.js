@@ -1,29 +1,38 @@
-module.exports = {
+var _mediator = null;
+var _config = null;
+var _conn = null;
 
-    init: function (mediator) {
-        //var sockJsServer = require("sockJsServer");
-        //var config = mediator.config();
+var init = function(mediator){
+    var http = require('http');
+    var sockjs = require('sockjs');
+    _mediator = mediator;
+    _config = mediator.config();
 
-        // init the sock js listening based on configuration (host, port)
-        // sockjs.listen(config.port, config.ip)
-        //
-        // sockjs.on("open", function(){
-        //
-        // 	save the connection
-        // 	conn.on(data, function(data){
-        // 		mediator.emit(data.eventname, data.data);
-        // 	})
-        //
-        // })
-    },
-    publish: function (event, data) {
-        // there was a publish event on your local mediator you
-        // have to send that to the other mediator when the permission is ok
+    var echo = sockjs.createServer({ sockjs_url: 'http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js' });
+    echo.on('connection', function(conn){
+        _conn = conn;
+        connections.push(conn);
+        conn.on('data', function(message) {
+            conn.write(message);
+        });
+        conn.on('close', function() {});
+    });
 
-        // check permission
-        // sockjs.send({event: event, data:data, target: mediator.id});
+    var server = http.createServer();
+    echo.installHandlers(server, {prefix:'/echo'});
+    server.listen(_config.port,_config.ip);
+};
 
-    }
+var publish = function(event, data){
+    var dontPublishWhen = ["local","off"];
+    if(dontPublishWhen.indexOf(_config.permission) > -1 ){
+        _conn.write({event: event, data:data, target: mediator.id});
 
+  }
 
 };
+
+module.exports = {
+	init: init,
+	publish: publish
+}

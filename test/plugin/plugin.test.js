@@ -1,3 +1,12 @@
+sinon = require('sinon');
+chai = require('chai');
+// expert some variables not to require them in all tests
+assert = chai.assert;
+expect = chai.expect;
+should = chai.should();
+
+
+
 var MaggaMediator = require('maggaMediator.js');
 
 describe('Plugin', function() {
@@ -10,7 +19,7 @@ describe('Plugin', function() {
     // Assign config
     it('should call plugin init',function(){
       maggaMediator.plugin(myPlugin);
-      chai.expect(callbackInit.called).to.be.true;
+      expect(callbackInit.called).to.be.true;
     });
 
 })

@@ -19,5 +19,7 @@
     "smarttabs": true,
     "undef": true,
     "boss": true,
-    "evil": true
+    "evil": true,
+    "indent": 2,
+    "esnext": true
 }

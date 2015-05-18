@@ -70,10 +70,10 @@ describe('Bacon mediator plugin', function(){
         it('should unsubscribe from channel successfully',function(){
             //expect(maggaMediator[CHANNEL_NAME_ONE]).to.have.property('subscribers').with.property('length');
             //var subsLength = maggaMediator[CHANNEL_NAME_ONE].subscribers.length;
-            mediatorListnerOne.should.have.length(1);
+            expect(mediatorListnerOne).to.have.length(1);
             maggaMediator.unsubscribe(CHANNEL_NAME_ONE, callbackOne);
             maggaMediator.publish(CHANNEL_NAME_ONE, MESSAGE_ONE);
-            mediatorListnerOne.should.have.length(1);
+            expect(mediatorListnerOne).to.have.length(1);
             //maggaMediator[CHANNEL_NAME_ONE].subscribers.should.have.length(subsLength-1);
         });
 

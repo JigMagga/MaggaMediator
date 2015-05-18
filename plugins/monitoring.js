@@ -8,7 +8,7 @@ function Monitor(){
 Monitor.prototype._addHandler = function(cb){
     var self = this;
     this._handlers[cb] = function (ev, val) {
-        self._callbackQueue(queueName, handler);
+        self._callbackQueue(eventName, handler);
     };
 };
 Monitor.prototype._removeHandler = function(cb){
@@ -36,28 +36,28 @@ Monitor.prototype.unbind = function(){};
 // temporary stubs for canjs.map compatibility
 
 /**
- * Monitor all queues or one single queue. The vaules get sent to a callback function or are logged to the console
- * @param {function|string} cb - the callback function or the queue name
+ * Monitor all events or one single event. The vaules get sent to a callback function or are logged to the console
+ * @param {function|string} cb - the callback function or the event name
  */
 Monitor.prototype.monitor = function (cb) {
     var self = this,
         selfArr;
     if (typeof cb === "string") {
         //self[cb].bind("time", function () {
-        //    self._logQueue(cb);
+        //    self._logEvent(cb);
         //});
     } else {
         if (typeof cb === "function") {
             self.monitorCallback.push(cb);
             self.monitorMethod = "_callbackQueue";
         } else {
-            self.monitorMethod = "_logQueue";
+            self.monitorMethod = "_logEvent";
         }
         selfArr = self.__get();
-        for (var queueName in selfArr) {
-            if (selfArr.hasOwnProperty(queueName)) {
-                //self[queueName].bind("time", function () {
-                //    self[self.monitorMethod](queueName, self.monitorCallback);
+        for (var eventName in selfArr) {
+            if (selfArr.hasOwnProperty(eventName)) {
+                //self[eventName].bind("time", function () {
+                //    self[self.monitorMethod](eventName, self.monitorCallback);
                 //});
             }
         }
@@ -65,54 +65,54 @@ Monitor.prototype.monitor = function (cb) {
 };
 
 /**
- * Helper method to bind all eisting monitors to new queues
- * @param {string} queueName - the queue name
+ * Helper method to bind all eisting monitors to new events
+ * @param {string} eventName - the event name
  * @private
  */
-Monitor.prototype._addmonitorQueue = function (queueName) {
+Monitor.prototype._addmonitorQueue = function (eventName) {
     var self = this;
     if (self.monitorMethod) {
         //if (self.monitorCallback.length) {
         //    self.monitorCallback.forEach(function(cb) {
-        //        self[queueName].bind("time", function () {
-        //            self[self.monitorMethod](queueName, cb);
+        //        self[eventName].bind("time", function () {
+        //            self[self.monitorMethod](eventName, cb);
         //        });
         //    });
         //} else {
-        //    self[queueName].bind("time", function () {
-        //        self[self.monitorMethod](queueName);
+        //    self[eventName].bind("time", function () {
+        //        self[self.monitorMethod](eventName);
         //    });
         //}
     }
 };
 
 /**
- * Get all queue names
+ * Get all event names
  * @returns {array}
  */
-Monitor.prototype.getAllQueues = function () {
+Monitor.prototype.getAllEvents = function () {
     return can.Map.keys(this);
 };
 
 /**
- * Writes all queue data to the callback funktion
- * @param {string} queueName - the queue name
+ * Writes all event data to the callback funktion
+ * @param {string} eventName - the event name
  * @param {function} cb - the callback function
  * @private
  */
-Monitor.prototype._callbackQueue = function(queueName, cb) {
-    //cb(this.attr(queueName).value, queueName, this.attr(queueName).publisher, this.attr(queueName).time, this.attr(queueName).subscribers.attr());
+Monitor.prototype._callbackQueue = function(eventName, cb) {
+    //cb(this.attr(eventName).value, eventName, this.attr(eventName).publisher, this.attr(eventName).time, this.attr(eventName).subscribers.attr());
 };
 
 /**
- * Writes all queue data to the console
- * @param {string} queueName - the queue name
+ * Writes all event data to the console
+ * @param {string} eventName - the event name
  * @param _cb - not used
  * @private
  */
-Monitor.prototype._logQueue = function(queueName, _cb) {
+Monitor.prototype._logEvent = function(eventName, _cb) {
     if (typeof console !== "undefined" && console.log) {
-        console.log("JM Mediator - Queue:", queueName, ", Value:", this.attr(queueName).value, ", Publisher:", this.attr(queueName).publisher, ", Time:", this.attr(queueName).time, ", Subscribers:", this.attr(queueName).subscribers.attr());
+        console.log("JM Mediator - Event:", eventName, ", Value:", this.attr(eventName).value, ", Publisher:", this.attr(eventName).publisher, ", Time:", this.attr(eventName).time, ", Subscribers:", this.attr(eventName).subscribers.attr());
     }
 };
 
@@ -135,26 +135,26 @@ module.exports = {
         //
         // })
     },
-    subscribe: function (queueName, cb) {
-        console.log('Monitor subscribe ',queueName,cb,this);
-        // If we have this queue then subscribe
+    subscribe: function (eventName, cb) {
+        console.log('Monitor subscribe ',eventName,cb,this);
+        // If we have this event then subscribe
         var self = this.monitor;
-        if (typeof self.attr(queueName) !== "undefined") {
+        if (typeof self.attr(eventName) !== "undefined") {
             if (typeof cb === "function") {
-                self._callbackQueue(queueName, cb);
+                self._callbackQueue(eventName, cb);
             }
         } else {
-            // create new queue
-            self._addmonitorQueue(queueName);
+            // create new event
+            self._addmonitorQueue(eventName);
         }
         if (typeof cb === "function") {
             self._addHandler(cb);
-            //self[queueName].bind("time", self._handlers[cb]);
+            //self[eventName].bind("time", self._handlers[cb]);
         }
 
     },
-    unsubscribe: function (queueName, cb) {
-        console.log('Monitor unsubscribe ',queueName,cb,this);
+    unsubscribe: function (eventName, cb) {
+        console.log('Monitor unsubscribe ',eventName,cb,this);
         var self = this.monitor;
 
         // Remember that _handlers property belongs to the monitor
@@ -165,19 +165,19 @@ module.exports = {
         }
 
     },
-    publish: function(queueName, value){
-        console.log('Monitor publish ', queueName,value,this);
+    publish: function(eventName, value){
+        console.log('Monitor publish ', eventName,value,this);
         var self = this.monitor;
 
-        //if (self[queueName] === undefined) {
-        //    self.attr(queueName, {"subscribers": []});
-        //    self._addmonitorQueue(queueName);
+        //if (self[eventName] === undefined) {
+        //    self.attr(eventName, {"subscribers": []});
+        //    self._addmonitorEvent(eventName);
         //}
         //else {
-        //    var subscribers = self.attr(queueName).subscribers;
+        //    var subscribers = self.attr(eventName).subscribers;
         //    // Check if subscribers is an Array
         //    if (Object.prototype.toString.call(subscribers) !== '[object Array]') {
-        //        throw new Error("Subscribers property of queue mast be an Array.");
+        //        throw new Error("Subscribers property of event mast be an Array.");
         //    }
         //    // IE: 9+
         //    subscribers.forEach(function(cb/*,ind,arr*/){
@@ -188,11 +188,11 @@ module.exports = {
         //    });
         //
         //}
-        //self[queueName].attr("publisher", publisher);
+        //self[eventName].attr("publisher", publisher);
 
         // TODO: this is how events were exposed. Reimplement
-        //self[queueName].attr("value", value);
-        //self[queueName].attr("time", new Date());
+        //self[eventName].attr("value", value);
+        //self[eventName].attr("time", new Date());
 
     }
 }

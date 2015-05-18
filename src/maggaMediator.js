@@ -60,41 +60,41 @@ var DEFAULT_CONFIG = {
 
 
   /**
-   * Subscribe "subscriber" to a queue using a callback
-   * @param {string} queueName - the queue name
+   * Subscribe "subscriber" to a event using a callback
+   * @param {string} eventName - the event name
    * @param {function} cb - the callback function
    * @returns {*}
    */
-  MaggaMediator.prototype.subscribe = function (queueName, cb) {
-    if (typeof queueName !== "string") {
-      throw new Error("[MaggaMediator.subscribe] Queue name must be string");
+  MaggaMediator.prototype.subscribe = function (eventName, cb) {
+    if (typeof eventName !== "string") {
+      throw new Error("[MaggaMediator.subscribe] event name must be string");
     }
     if (typeof cb !== "function") {
       throw new Error('[MaggaMediator.subscribe] Second argument must be a function');
 
     }
-    this.emit('subscribe', queueName, cb);
+    this.emit('subscribe', eventName, cb);
   };
 
   /**
-   * Unsubscribe "cb" from a queue
-   * @param {string} queueName - the queue name
+   * Unsubscribe "cb" from a event
+   * @param {string} eventName - the event name
    * @param {string} cb - the cb
    */
-  MaggaMediator.prototype.unsubscribe = function (queueName, cb) {
-    this.emit('unsubscribe', queueName, cb);
+  MaggaMediator.prototype.unsubscribe = function (eventName, cb) {
+    this.emit('unsubscribe', eventName, cb);
   };
 
   /**
-   * Publish a value to a queue
-   * @param {string} queueName - the queue name
+   * Publish a value to a event
+   * @param {string} eventName - the event name
    * @param value - a value of any type
    */
-  MaggaMediator.prototype.publish = function (queueName, value) {
-    if (typeof queueName !== "string") {
-      throw new Error("Queue name must be string");
+  MaggaMediator.prototype.publish = function (eventName, value) {
+    if (typeof eventName !== "string") {
+      throw new Error("Event name must be string");
     }
-    this.emit('publish', queueName, value);
+    this.emit('publish', eventName, value);
   };
 
   /**

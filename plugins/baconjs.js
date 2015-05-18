@@ -4,72 +4,72 @@ module.exports = {
     init: function(mediator){
         mediator.bacon = {
             bus: new Bacon.Bus(),
-            queue:{}
+            event:{}
         };
-        mediator.getEventStream = function(queueName){
-            var queue;
-            // If we don't specify the queue then return Bus with all queues
-            if (typeof queueName === 'undefined') {
+        mediator.getEventStream = function(eventName){
+            var event;
+            // If we don't specify the event then return Bus with all events
+            if (typeof eventName === 'undefined') {
                 return this.bacon.bus;
             }
             else {
-                queue = this.bacon.queue[queueName];
+                event = this.bacon.event[eventName];
             }
-            if (typeof queue !== 'undefined') {
-                return queue._eventStream;
+            if (typeof event !== 'undefined') {
+                return event._eventStream;
             }
-            // if we don't have such queue then we return ended EventStream
+            // if we don't have such event then we return ended EventStream
             else {
                 return Bacon.never();
             }
 
         };
     },
-    subscribe: function (queueName, cb) {
+    subscribe: function (eventName, cb) {
         var bacon = this.bacon;
-        // If we don't have this queue then create it
-        if (typeof bacon.queue[queueName] == 'undefined') {
-            bacon.queue[queueName] = {
+        // If we don't have this event then create it
+        if (typeof bacon.event[eventName] == 'undefined') {
+            bacon.event[eventName] = {
                 _eventStream:
-                    Bacon.fromEvent(this,'publish',function(eventQueueName,eventValue){
+                    Bacon.fromEvent(this,'publish',function(eventEventName,eventValue){
                         // transforming to one object
-                        // We need queue to filter it
+                        // We need event to filter it
                         // Then we will take only value
                         return {
-                            queue:eventQueueName,
+                            event:eventEventName,
                             value:eventValue
                         };
                     })
                         .filter(function(event){
-                            return event.queue === queueName;
+                            return event.event === eventName;
                         }).map(".value") //we need only value
-                        .name(queueName),
+                        .name(eventName),
                 _unsubscribers: {}
 
             };
-            bacon.bus.plug(bacon.queue[queueName]._eventStream);
+            bacon.bus.plug(bacon.event[eventName]._eventStream);
         }
 
-        var queue = bacon.queue[queueName];
+        var event = bacon.event[eventName];
         // Subscribe cb to the stream and save unsubscribe hook
-        queue._unsubscribers[cb] = queue._eventStream.onValue(function(val){
+        event._unsubscribers[cb] = event._eventStream.onValue(function(val){
             cb(val);
         });
     },
-    unsubscribe: function (queueName, cb) {
+    unsubscribe: function (eventName, cb) {
         var bacon = this.bacon;
-        if (typeof bacon.queue[queueName] === 'undefined') {
-            console.warn('Queue is undefined in unsubscribe method');
+        if (typeof bacon.event[eventName] === 'undefined') {
+            console.warn('Event is undefined in unsubscribe method');
         }
-        else if (typeof bacon.queue[queueName]._unsubscribers[cb] !== 'function') {
+        else if (typeof bacon.event[eventName]._unsubscribers[cb] !== 'function') {
             console.warn('cb is undefined in unsubscribe method');
         }
         else {
             // call of unsubscribe function
-            this.bacon.queue[queueName]._unsubscribers[cb]();
+            this.bacon.event[eventName]._unsubscribers[cb]();
         }
     }
     // We dont need publish function because we use Bacon.fromEvent(this,'publish'...)
     // to connect directly to the EventEmitter
-    //publish: function(queueName, value){}
+    //publish: function(eventName, value){}
 }

@@ -4,7 +4,7 @@ describe('Create', function() {
     var maggaMediator = new MaggaMediator();
     describe('maggaMediator exists', function() {
         it('should mediator exist',function(){
-            should.exist(maggaMediator);
+          expect(maggaMediator).to.exist;
         });
     })
 })

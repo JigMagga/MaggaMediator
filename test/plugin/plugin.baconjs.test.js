@@ -1,7 +1,7 @@
 var MaggaMediator = require('maggaMediator.js');
 
 describe('Bacon mediator plugin', function(){
-    var maggaMediator = new MaggaMediator({"internal":['baconjs']});
+    var maggaMediator = new MaggaMediator({"plugins":['baconjs']});
     var CHANNEL_NAME_ONE = 'channel:one',
         CHANNEL_NAME_TWO = 'channel:two',
         MESSAGE_ONE = 'Message one',

@@ -1,3 +1,9 @@
+var DEFAULT_CONFIG = {
+  "plugins": ['simple','monitoring']
+  //,external: [{"transport":"socks","address":"localhost","port":"99999"}]
+  // "plugins.socks: {"address":"localhost","port":"99999"}"
+};
+
 (function (global, factory) {
   'use strict';
   var consoleMsg;
@@ -21,13 +27,6 @@
   console.log(consoleMsg);
 }(this, function () {
   'use strict';
-
-  var DEFAULT_CONFIG = {
-    "internal": ['simple', 'monitoring']
-    //,external: [{"transport":"socks","address":"localhost","port":"99999"}]
-  };
-
-
   var util = require('util');
   var EventEmitter = require('events').EventEmitter;
 
@@ -39,7 +38,7 @@
     this.init();
   }
 
-  // extend MaggaMediator with EventEmitter
+// extend MaggaMediator with EventEmitter
   util.inherits(MaggaMediator, EventEmitter);
 
   /**
@@ -48,39 +47,14 @@
    */
   MaggaMediator.prototype.plugin = require("./plugin/plugin.js");
 
+  MaggaMediator.prototype._loadPlugins = require("./plugin/loadPlugins.js");
+
   MaggaMediator.prototype.init = function () {
     var self = this;
     var config = self._config;
-    if (Object.prototype.toString.call(config.internal) !== '[object Array]') {
-      throw new Error("config.internal is not an Array.");
+    if(typeof config.plugins !== 'undefined'){
+      self._loadPlugins(config.plugins);
     }
-
-    //config.internal.forEach(function(value){
-    //    moduleFileName = '../plugins/'+value+'.js';
-    //    console.log(moduleFileName);
-    //    plugin = require(moduleFileName);
-    //    self.plugin(plugin);
-    //});
-
-    // Did this because dynamically generated names doesnt work in browserify.
-    // See more https://github.com/substack/node-browserify/issues/377
-
-    config.internal.forEach(function (value) {
-      switch (value) {
-        case 'simple':
-          self.plugin(require('../plugins/simple.js'));
-          break;
-        case 'monitoring':
-          self.plugin(require('../plugins/monitoring.js'));
-          break;
-        case 'sockjs':
-          self.plugin(require('../plugins/sockjs/sockjs.js'));
-          break;
-        case 'baconjs':
-          self.plugin(require('../plugins/baconjs.js'));
-          break;
-      }
-    });
 
   };
 
@@ -146,11 +120,10 @@
     }
   }
 
-  //MaggaMediator.prototype.constructor = MaggaMediator;
   return MaggaMediator;
 }));
 
-var MaggaMediator = require('maggaMediator');
-var maggaMediator = new MaggaMediator();
-var sockjs = require('./../plugins/sockjs/sockjs')();
-maggaMediator.plugin(sockjs);
+//var MaggaMediator = require('maggaMediator');
+//var maggaMediator = new MaggaMediator();
+//var sockjs = require('./../plugins/sockjs/sockjs')();
+//maggaMediator.plugin(sockjs);

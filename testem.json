@@ -16,7 +16,6 @@
   "after_tests": "rm test/browserified.js",
   "launch_in_dev": [
     "node",
-    "firefox",
     "chrome"
   ],
   "launch_in_ci": [

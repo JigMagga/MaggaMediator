@@ -29,7 +29,7 @@ module.exports = function loadPlugins(pluginList) {
         self.plugin(require('../../plugins/monitoring.js'));
         break;
       case 'sockjs':
-        self.plugin(require('../../plugins/sockjs/sockjs.js')());
+        self.plugin(require('../../plugins/sockjs/sockjs.js'));
         break;
       case 'baconjs':
         self.plugin(require('../../plugins/baconjs.js'));

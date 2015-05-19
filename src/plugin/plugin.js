@@ -2,9 +2,9 @@
 
 /**
  * Plugin API to register a plugin
- * @param  {[type]} pluginDefinition [description]
- * @return {[type]}        [description]
+ * @param  {[type]} plugin [pass a custom plugin]
  */
+
 module.exports = function plugin(plugin) {
   if (typeof plugin.init === 'function') {
     plugin.init(this);
@@ -23,12 +23,11 @@ module.exports = function plugin(plugin) {
   }
 
   if (typeof plugin.error === 'function') {
-    this.on('error', /*error;*/ data);
+    this.on('error', plugin.error);
   }
 
   if (typeof plugin.warning === 'function') {
-    this.on('warning', /*warning */ data);
+    this.on('warning', plugin.warning);
   }
-
 };
 

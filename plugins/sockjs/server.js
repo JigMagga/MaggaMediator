@@ -5,20 +5,23 @@ var currentConn = null;
 var mediator = null;
 var config = null;
 
-var init = function(MaggaMediator) {
+var init = function (MaggaMediator) {
   var http = require('http');
   var sockjs = require('sockjs');
   mediator = MaggaMediator;
   config = mediator.config();
 
-  var echo = sockjs.createServer({sockjs_url: 'http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js'});
-  echo.on('connection', function(conn) {
+  var echo = sockjs.createServer(
+    {sockjs_url: 'http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js'}
+  );
+  echo.on('connection', function (conn) {
     currentConn = conn;
     connections.push(currentConn);
-    currentConn.on('data', function(message) {
+    currentConn.on('data', function (message) {
+      console.log("some data");
       currentConn.write(message);
     });
-    currentConn.on('close', function() {
+    currentConn.on('close', function () {
     });
   });
 
@@ -28,13 +31,19 @@ var init = function(MaggaMediator) {
   console.log('listening on port: ' + config.host + ':' + config.port + ' ');
 };
 
-var publish = function(event, data) {
-  if (config.permission && (config.permission[event] !== 'local' || config.permission[event] !== 'off')) {
+var publish = function (event, data) {
+  if (
+    config.permission && (
+    config.permission[event] !== 'local' ||
+    config.permission[event] !== 'off'
+    )) {
     currentConn.write({event: event, data: data, target: mediator.id});
   }
 };
 
-module.exports = {
-  init: init,
-  publish: publish
+module.exports = function () {
+  return {
+    init: init,
+    publish: publish
+  };
 };

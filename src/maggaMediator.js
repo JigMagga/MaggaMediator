@@ -68,6 +68,7 @@ var DEFAULT_CONFIG = {
    * @returns {void}
    */
   MaggaMediator.prototype.subscribe = function (eventName, cb) {
+    var eventNames, self;
     if (typeof eventName !== "string") {
       throw new Error("[MaggaMediator.subscribe] event name must be string");
     }
@@ -75,7 +76,24 @@ var DEFAULT_CONFIG = {
       throw new Error('[MaggaMediator.subscribe] Second argument must be a function');
 
     }
-    this.emit('subscribe', eventName, cb);
+
+    self = this;
+
+    // If we have a system of eventNames location then we use it.
+    // Otherwise we just wrap the name into the Array
+    if (typeof self.eventNames !== 'undefined') {
+      eventNames = self.eventNames.find(eventName);
+    }
+    else eventNames = [eventName];
+
+    // If we have a system of permissions then we use it.
+    if (typeof self.permissions !== 'undefined') {
+      eventNames = self.permissions.filter(eventNames,'subscribe');
+    }
+
+    eventNames.forEach(function (eventNameItem) {
+      self.emit('subscribe', eventNameItem, cb);
+    })
   };
 
   /**
@@ -85,7 +103,25 @@ var DEFAULT_CONFIG = {
    * @returns {void}
    */
   MaggaMediator.prototype.unsubscribe = function (eventName, cb) {
-    this.emit('unsubscribe', eventName, cb);
+    var self,eventNames;
+
+    self = this;
+
+    // If we have a system of eventNames location then we use it.
+    // Otherwise we just wrap the name into the Array
+    if (typeof self.eventNames !== 'undefined') {
+      eventNames = self.eventNames.find(eventName);
+    }
+    else eventNames = [eventName];
+
+    // If we have a system of permissions then we use it.
+    if (typeof self.permissions !== 'undefined') {
+      eventNames = self.permissions.filter(eventNames,'unsubscribe');
+    }
+
+    eventNames.forEach(function (eventNameItem) {
+      self.emit('unsubscribe', eventNameItem, cb);
+    })
   };
 
   /**
@@ -98,7 +134,26 @@ var DEFAULT_CONFIG = {
     if (typeof eventName !== "string") {
       throw new Error("Event name must be string");
     }
-    this.emit('publish', eventName, value);
+    var self,eventNames;
+
+    self = this;
+
+    // If we have a system of eventNames location then we use it.
+    // Otherwise we just wrap the name into the Array
+    if (typeof self.eventNames !== 'undefined') {
+      eventNames = self.eventNames.find(eventName);
+    }
+    else eventNames = [eventName];
+
+    // If we have a system of permissions then we use it.
+    if (typeof self.permissions !== 'undefined') {
+      eventNames = self.permissions.filter(eventNames,'publish');
+    }
+
+    eventNames.forEach(function (eventNameItem) {
+      self.emit('publish', eventNameItem, value);
+    })
+
   };
 
   /**
@@ -126,8 +181,3 @@ var DEFAULT_CONFIG = {
 
   return MaggaMediator;
 }));
-
-//var MaggaMediator = require('maggaMediator');
-//var maggaMediator = new MaggaMediator();
-//var sockjs = require('./../plugins/sockjs/sockjs')();
-//maggaMediator.plugin(sockjs);

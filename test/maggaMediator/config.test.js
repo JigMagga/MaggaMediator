@@ -1,3 +1,5 @@
+'use strict';
+
 var MaggaMediator = require('maggaMediator.js');
 
 describe('Config', function() {
@@ -44,7 +46,6 @@ describe('Config', function() {
       }
       expect(fn).to.not.throw(Error);
     });
-
     it("should throw error on string value of plugins", function(){
       var fn = function (){
         return new MaggaMediator({plugins:"simple"});

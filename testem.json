@@ -20,7 +20,6 @@
   ],
   "launch_in_ci": [
     "node",
-    "firefox",
-    "chrome"
+    "phantomjs"
   ]
 }

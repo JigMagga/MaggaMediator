@@ -5,5 +5,4 @@ module.exports = function () {
     return require('./server.js');
   }
   return require('./client.js');
-}();
-
+};

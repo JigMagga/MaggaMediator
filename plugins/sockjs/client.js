@@ -7,11 +7,11 @@ var config = null;
 var init = function (MaggaMediator) {
   mediator = MaggaMediator;
   config = mediator.config();
-  var path = 'http://'.concat(config.host, ':', config.port, config.path);
+  var connConfig = config.plugins.sockjs;
+  var path = 'http://'.concat(connConfig.host, ':', connConfig.port, connConfig.path);
 
   conn = require('sockjs-client');
   conn = new conn(path);
-
   conn.onopen = function () {
     console.log('open');
   };
@@ -24,20 +24,17 @@ var init = function (MaggaMediator) {
 };
 
 var publish = function () {
-  console.log('before publish condition');
+  var permissions = config.plugins.sockjs.permissions;
   if (
-    config.plugins.sockjs.permissions && (
-    config.plugins.sockjs.permissions['publish'] !== 'local' ||
-    config.plugins.sockjs.permissions['publish'] !== 'off'
+    permissions && (
+    permissions.publish !== 'local' ||
+    permissions.publish !== 'off'
     )) {
-    console.log('in publish');
-    conn.write({event: config.permission[event], data: {data: 'data'}, target: mediator.id});
+    conn.send({event: permissions.publish, data: {data: 'data'}, target: mediator.id});
   }
 };
 
-module.exports = function () {
-  return {
+module.exports = {
     init: init,
     publish: publish
-  };
 };

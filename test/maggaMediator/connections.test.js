@@ -1,41 +1,47 @@
 'use strict';
 
 var MaggaMediator = require('maggaMediator.js');
+var sockjspluginConfig = {
+  plugins: {
+    "sockjs": {
+      host: 'localhost',
+      port: 8080,
+      path: '/mediator',
+      permissions: {
+        publish: 'on'
+      }
+    }
+  }
+};
 
 describe.only('connections', function () {
 
-  describe('server', function() {
+  describe('server', function () {
     if ((typeof (isBrowser) === 'undefined') || !isBrowser) {
       it('host should connect', function () {
-        var serverMediator = new MaggaMediator({
-          plugins: {
-            sockjs: {
-              host: 'localhost',
-              port: 8080,
-              path: '/mediator',
-              permissions: {
-                publish: 'on'
-              }
-            }
-          }
-        });
+        var serverMediator = new MaggaMediator(sockjspluginConfig);
       });
     }
   });
 
   describe('client', function () {
     if ((typeof (isBrowser) !== 'undefined') && isBrowser) {
-      var clientMediator = null;
+      var clientMediator;
       it('should connect', function () {
-        clientMediator = new MaggaMediator({plugins: ['simple', 'sockjs']});
+        var serverMediator = new MaggaMediator(sockjspluginConfig);
+        clientMediator = new MaggaMediator(sockjspluginConfig);
+        clientMediator.subscribe('publish1', function () {
+          console.log('subscribed to a publish event');
+          clientMediator.publish('publish1', {foo: 'bar'});
+        });
       });
       it('should subscribe', function () {
         clientMediator.subscribe('publish1', function () {
           console.log('subscribed to a publish event');
         });
       });
-      it('should publish ', function () {
-        console.log('smthg published');
+      it.skip('should publish ', function () {
+        clientMediator = new MaggaMediator(sockjspluginConfig);
         clientMediator.publish('publish1', {foo: 'bar'});
       });
     }

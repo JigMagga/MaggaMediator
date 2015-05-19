@@ -55,7 +55,9 @@ var DEFAULT_CONFIG = {
     if(typeof config.plugins !== 'undefined'){
       self._loadPlugins(config.plugins);
     }
-
+    if(typeof config.loadPlugins !== 'undefined'){
+      self._loadPlugins(config.loadPlugins);
+    }
   };
 
 

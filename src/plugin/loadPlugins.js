@@ -1,14 +1,25 @@
 /**
  * loads a plugin from the provised list of names
  * use it like Mediator.load(['simple','monitoring'])
- * @param pluginList
+ * @param plugins
  */
-module.exports = function loadPlugins(pluginList) {
-  if (Object.prototype.toString.call(pluginList) !== '[object Array]') {
-    throw Error("Plugin list is not an Array");
+module.exports = function loadPlugins(plugins) {
+  var self = this,
+    pluginList = [];
+  if (Object.prototype.toString.call(plugins) === "[object Array]") {
+    pluginList = plugins;
+  }
+  else if (Object.prototype.toString.call(plugins) === "[object Object]") {
+    for (var key in plugins) {
+      if (plugins.hasOwnProperty(key)) {
+        pluginList.push(key);
+      }
+    }
+  }
+  else {
+    throw Error("Type of plugins must be Array or object");
   }
 
-  var self = this;
 
   //pluginList.forEach(function(value){
   //    moduleFileName = '../plugins/'+value+'.js';
@@ -29,7 +40,7 @@ module.exports = function loadPlugins(pluginList) {
         self.plugin(require('../../plugins/monitoring.js'));
         break;
       case 'sockjs':
-        self.plugin(require('../../plugins/sockjs/sockjs.js'));
+        self.plugin(require('../../plugins/sockjs/sockjs.js')());
         break;
       case 'baconjs':
         self.plugin(require('../../plugins/baconjs.js'));

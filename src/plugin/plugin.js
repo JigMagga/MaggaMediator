@@ -1,26 +1,34 @@
+'use strict';
+
 /**
  * Plugin API to register a plugin
  * @param  {[type]} pluginDefinition [description]
  * @return {[type]}        [description]
  */
-module.exports = function plugin(pluginDefinition) {
-  if (typeof pluginDefinition.init === 'function') {
-    pluginDefinition.init(this);
+module.exports = function plugin(plugin) {
+  if (typeof plugin.init === 'function') {
+    plugin.init(this);
   }
 
-  if (typeof pluginDefinition.publish === 'function') {
-    this.on('publish', pluginDefinition.publish);
+  if (typeof plugin.publish === 'function') {
+    this.on('publish', plugin.publish);
   }
 
-  if (typeof pluginDefinition.subscribe === 'function') {
-    this.on('subscribe', pluginDefinition.subscribe);
+  if (typeof plugin.subscribe === 'function') {
+    this.on('subscribe', plugin.subscribe);
   }
 
-  if (typeof pluginDefinition.unsubscribe === 'function') {
-    this.on('unsubscribe', pluginDefinition.unsubscribe);
+  if (typeof plugin.unsubscribe === 'function') {
+    this.on('unsubscribe', plugin.unsubscribe);
   }
 
-  // TODO unsubscribe, error, warning
-  // TODO implement event emit in mediator
+  if (typeof plugin.error === 'function') {
+    this.on('error', /*error;*/ data);
+  }
+
+  if (typeof plugin.warning === 'function') {
+    this.on('warning', /*warning */ data);
+  }
+
 };
 

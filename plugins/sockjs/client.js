@@ -1,32 +1,31 @@
-var _mediator = null;
-var _config = null;
-var _conn = null;
+'use strict';
 
-var init = function (mediator) {
-  _mediator = mediator;
-  _config = mediator.config();
-  var path = "http://".concat(_config.host, ":", _config.port, _config.path);
+var conn = null;
+var mediator = null;
+var config = null;
 
-  _conn = require('sockjs-client');
-  _conn = new _conn(path);
+var init = function(MaggaMediator) {
+  mediator = MaggaMediator;
+  config = mediator.config();
+  var path = 'http://'.concat(config.host, ':', config.port, config.path);
 
-  _conn.onopen = function () {
+  conn = require('sockjs-client');
+  conn = new conn(path);
+
+  conn.onopen = function() {
     console.log('open');
   };
-  _conn.onmessage = function (e) {
+  conn.onmessage = function(e) {
     console.log('message', e.data);
   };
-  _conn.onclose = function () {
+  conn.onclose = function() {
     console.log('close');
   };
-
-  _conn.send('test');
 };
 
-var publish = function () {
-  var dontPublishWhen = ["local", "off"];
-  if (dontPublishWhen.indexOf(_config.permission) > -1) {
-    _conn.write({event: event, data: data, target: mediator.id});
+var publish = function() {
+  if (config.permission && (config.permission[event] !== 'local' || config.permission[event] !== 'off')) {
+    conn.write({event: config.permission[event], data: {data: 'data'}, target: mediator.id});
   }
 };
 

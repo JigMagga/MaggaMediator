@@ -4,7 +4,7 @@ describe('Create.', function() {
     var maggaMediator = new MaggaMediator();
     describe('maggaMediator exists', function() {
         it('should mediator exist',function(){
-            should.exist(maggaMediator);
+            expect(maggaMediator).to.exist;
         });
     })
 });
@@ -18,9 +18,11 @@ describe('Subscribe and publish.', function() {
         mediatorListnerOne = mediatorListnerTwo = [];
 
     // Assign config
-    it('should exist methods subscribe and publish',function(){
-        should.exist(maggaMediator.subscribe);
-        should.exist(maggaMediator.publish);
+    it('should exist methods subscribe, unsubscribe and publish',function(){
+        expect(maggaMediator).to.have.property('subscribe');
+        expect(maggaMediator).to.have.property('unsubscribe');
+        expect(maggaMediator).to.have.property('publish');
+
     });
 
 
@@ -37,7 +39,7 @@ describe('Subscribe and publish.', function() {
             maggaMediator.subscribe(CHANNEL_NAME_ONE, callbackOne);
             maggaMediator.publish(CHANNEL_NAME_ONE, MESSAGE_ONE);
             maggaMediator.publish(CHANNEL_NAME_ONE, MESSAGE_TWO);
-            mediatorListnerOne.should.have.length(2);
+            expect(mediatorListnerOne).have.length(2);
             assert.equal(mediatorListnerOne[0] ,MESSAGE_ONE,"Message one check");
             assert.equal(mediatorListnerOne[1] ,MESSAGE_TWO,"Message two check");
         });

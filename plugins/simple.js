@@ -16,24 +16,24 @@ module.exports = {
         //
         // })
     },
-    subscribe: function (queueName, cb) {
+    subscribe: function (eventName, cb) {
         var self = this;
 
-        // If we have this queue then subscribe
-        if (typeof self[queueName] !== "undefined") {
-            self[queueName].subscribers.push(cb);
+        // If we have this event then subscribe
+        if (typeof self[eventName] !== "undefined") {
+            self[eventName].subscribers.push(cb);
         } else {
-            // create new queue
-            self[queueName] =  {subscribers: [cb]};
+            // create new event
+            self[eventName] =  {subscribers: [cb]};
         }
-        return self[queueName];
+        return self[eventName];
     },
-    unsubscribe: function (queueName, cb) {
+    unsubscribe: function (eventName, cb) {
         var self = this;
 
-        if (typeof self[queueName] !== 'undefined' && typeof self[queueName].subscribers !== 'undefined') {
+        if (typeof self[eventName] !== 'undefined' && typeof self[eventName].subscribers !== 'undefined') {
             // delete cb from subscribers
-            var subscribers = self[queueName].subscribers,
+            var subscribers = self[eventName].subscribers,
                 idxOf = subscribers.indexOf(cb);
             while (idxOf !== -1) {
                 subscribers.splice(idxOf, 1);
@@ -43,17 +43,17 @@ module.exports = {
 
 
     },
-    publish: function(queueName, value){
+    publish: function(eventName, value){
         var self = this;
 
-        if (self[queueName] === undefined) {
-            self[queueName] = {"subscribers": []};
+        if (self[eventName] === undefined) {
+            self[eventName] = {"subscribers": []};
         }
         else {
-            var subscribers = self[queueName].subscribers;
+            var subscribers = self[eventName].subscribers;
             // Check if subscribers is an Array
             if (Object.prototype.toString.call(subscribers) !== '[object Array]') {
-                throw new Error("Subscribers property of queue mast be an Array.");
+                throw new Error("Subscribers property of event mast be an Array.");
             }
             // IE: 9+
             subscribers.forEach(function(cb/*,ind,arr*/){

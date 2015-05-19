@@ -14,7 +14,7 @@ var sockjspluginConfig = {
   }
 };
 
-describe.only('connections', function () {
+describe('connections', function () {
 
   describe('server', function () {
     if ((typeof (isBrowser) === 'undefined') || !isBrowser) {

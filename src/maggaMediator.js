@@ -89,7 +89,7 @@
    * Subscribe "subscriber" to a queue using a callback
    * @param {string} queueName - the queue name
    * @param {function} cb - the callback function
-   * @returns {*}
+   * @returns {void}
    */
   MaggaMediator.prototype.subscribe = function (queueName, cb) {
     if (typeof queueName !== "string") {
@@ -106,6 +106,7 @@
    * Unsubscribe "cb" from a queue
    * @param {string} queueName - the queue name
    * @param {string} cb - the cb
+   * @returns {void}
    */
   MaggaMediator.prototype.unsubscribe = function (queueName, cb) {
     this.emit('unsubscribe', queueName, cb);
@@ -115,6 +116,7 @@
    * Publish a value to a queue
    * @param {string} queueName - the queue name
    * @param value - a value of any type
+   * @returns {void}
    */
   MaggaMediator.prototype.publish = function (queueName, value) {
     if (typeof queueName !== "string") {

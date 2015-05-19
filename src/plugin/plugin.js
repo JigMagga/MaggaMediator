@@ -1,26 +1,26 @@
 /**
  * Plugin API to register a plugin
- * @param  {[type]} plugin [description]
+ * @param  {[type]} pluginDefinition [description]
  * @return {[type]}        [description]
  */
-module.exports = function plugin(plugin) {
-  if (typeof plugin.init === "function") {
-    plugin.init(this);
+module.exports = function plugin(pluginDefinition) {
+  if (typeof pluginDefinition.init === 'function') {
+    pluginDefinition.init(this);
   }
 
-  if (typeof plugin.publish === "function") {
-    this.on("publish", plugin.publish);
+  if (typeof pluginDefinition.publish === 'function') {
+    this.on('publish', pluginDefinition.publish);
   }
 
-  if (typeof plugin.subscribe === "function") {
-    this.on("subscribe", plugin.subscribe);
+  if (typeof pluginDefinition.subscribe === 'function') {
+    this.on('subscribe', pluginDefinition.subscribe);
   }
 
-  if (typeof plugin.unsubscribe === "function") {
-    this.on("unsubscribe", plugin.unsubscribe);
+  if (typeof pluginDefinition.unsubscribe === 'function') {
+    this.on('unsubscribe', pluginDefinition.unsubscribe);
   }
 
   // TODO unsubscribe, error, warning
   // TODO implement event emit in mediator
-
 };
+

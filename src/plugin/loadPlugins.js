@@ -48,6 +48,9 @@ module.exports = function loadPlugins(plugins) {
       case 'eventNamesSimple':
         self.plugin(require('../../plugins/eventNamesSimple.js'));
         break;
+      case 'permissionsSimple':
+        self.plugin(require('../../plugins/permissionsSimple.js'));
+        break;
       default:
         throw Error("No plugin for "+value+" found");
     }

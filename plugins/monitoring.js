@@ -136,7 +136,7 @@ module.exports = {
         // })
     },
     subscribe: function (eventName, cb) {
-        console.log('Monitor subscribe ',eventName,cb,this);
+        console.log('Monitor subscribe ',eventName,cb);
         // If we have this event then subscribe
         var self = this.monitor;
         if (typeof self.attr(eventName) !== "undefined") {
@@ -154,7 +154,7 @@ module.exports = {
 
     },
     unsubscribe: function (eventName, cb) {
-        console.log('Monitor unsubscribe ',eventName,cb,this);
+        console.log('Monitor unsubscribe ',eventName,cb);
         var self = this.monitor;
 
         // Remember that _handlers property belongs to the monitor
@@ -166,7 +166,7 @@ module.exports = {
 
     },
     publish: function(eventName, value){
-        console.log('Monitor publish ', eventName,value,this);
+        console.log('Monitor publish ', eventName,value);
         var self = this.monitor;
 
         //if (self[eventName] === undefined) {

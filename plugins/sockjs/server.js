@@ -9,12 +9,7 @@ var init = function(MaggaMediator) {
   var http = require('http');
   var sockjs = require('sockjs');
   mediator = MaggaMediator;
-  config = mediator.config({
-    type: 'sockJS',
-    host: 'localhost',
-    port: 8080,
-    path: '/mediator'
-  });
+  config = mediator.config();
 
   var echo = sockjs.createServer({sockjs_url: 'http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js'});
   echo.on('connection', function(conn) {
@@ -28,9 +23,9 @@ var init = function(MaggaMediator) {
   });
 
   var server = http.createServer();
-  echo.installHandlers(server, {prefix: '/echo'});
+  echo.installHandlers(server, {prefix: config.path});
   server.listen(config.port, config.host);
-  console.log('listening on port '+config.host+':'+config.port);
+  console.log('listening on port: ' + config.host + ':' + config.port + ' ');
 };
 
 var publish = function(event, data) {

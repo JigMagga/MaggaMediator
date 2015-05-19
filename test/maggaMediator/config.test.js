@@ -2,16 +2,16 @@
 
 var MaggaMediator = require('maggaMediator.js');
 
-describe('Create', function () {
+describe('Create', function() {
   var maggaMediator = new MaggaMediator();
-  describe('maggaMediator exists', function () {
-    it('should mediator exist', function () {
-      should.exist(maggaMediator);
+  describe('maggaMediator exists', function() {
+    it('should mediator exist', function() {
+      expect(maggaMediator).to.exist;
     });
   })
-})
+});
 
-describe('Config', function () {
+describe('Config', function() {
   var maggaMediator = new MaggaMediator();
 
   // Assign config
@@ -28,7 +28,7 @@ describe('Config', function () {
     assert.equal(maggaMediator.config().buz, 'bar', "Check after reassigning config. New key.");
     assert.equal(maggaMediator.config().baz, 1, "Check after reassigning config old value which wasn't in new config.");
   });
-})
+});
 
 
 //

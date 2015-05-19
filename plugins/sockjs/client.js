@@ -25,7 +25,7 @@ var init = function(MaggaMediator) {
 
 var publish = function() {
   if (config.permission && (config.permission[event] !== 'local' || config.permission[event] !== 'off')) {
-    conn.write({event: event, data: data, target: mediator.id});
+    conn.write({event: config.permission[event], data: {data: 'data'}, target: mediator.id});
   }
 };
 

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Plugin API to register a plugin
  * @param  {[type]} plugin [description]
@@ -27,4 +29,5 @@ module.exports = function plugin(plugin) {
   if (typeof plugin.warning === 'function') {
     this.on('warning', /*warning */ data);
   }
+
 };

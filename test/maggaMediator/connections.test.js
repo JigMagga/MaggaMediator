@@ -6,24 +6,29 @@ describe.only('connections', function() {
   it('host should connect', function() {
     if ((typeof (isBrowser) === 'undefined') || !isBrowser) {
       var serverMediator = new MaggaMediator();
-      var sockjsServer = require('./../../plugins/sockjs/sockjs')();
-      serverMediator.plugin(sockjsServer);
+      serverMediator.config({
+        type: 'sockJS',
+        host: 'localhost',
+        port: 8080,
+        path: '/mediator',
+        permissions:{
+          publish: 'on'
+        }
+      });
+      serverMediator._loadPlugins(["sockjs"]);
     }
   });
 
-  describe('client should listen & publish', function() {
-    var clientMediator = new MaggaMediator();
-    it('client should listen ', function() {
-      if ((typeof (isBrowser) !== 'undefined') && isBrowser) {
-        var sockjsClient = require('./../../plugins/sockjs/sockjs')();
-        clientMediator.plugin(sockjsClient);
-      }
-    });
-
-    it('client should publish ', function() {
-      if ((typeof (isBrowser) !== 'undefined') && isBrowser) {
-        clientMediator.publish({event: 'publish', data: 'data', target: 123456});
-      }
-    });
+  describe('client should connect & publish', function() {
+    if ((typeof (isBrowser) !== 'undefined') && isBrowser) {
+      var clientMediator = new MaggaMediator({plugins:['simple','sockjs']});
+      it('client should connect', function() {
+        //clientMediator.plugin(sockjsClient);
+      });
+      it('client should publish ', function() {
+        console.log("one step before publish");
+        clientMediator.publish('publish',{foo:'bar'});
+      });
+    }
   });
 });

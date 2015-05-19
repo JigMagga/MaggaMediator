@@ -63,7 +63,7 @@ var DEFAULT_CONFIG = {
    * Subscribe "subscriber" to a event using a callback
    * @param {string} eventName - the event name
    * @param {function} cb - the callback function
-   * @returns {*}
+   * @returns {void}
    */
   MaggaMediator.prototype.subscribe = function (eventName, cb) {
     if (typeof eventName !== "string") {
@@ -80,6 +80,7 @@ var DEFAULT_CONFIG = {
    * Unsubscribe "cb" from a event
    * @param {string} eventName - the event name
    * @param {string} cb - the cb
+   * @returns {void}
    */
   MaggaMediator.prototype.unsubscribe = function (eventName, cb) {
     this.emit('unsubscribe', eventName, cb);
@@ -89,6 +90,7 @@ var DEFAULT_CONFIG = {
    * Publish a value to a event
    * @param {string} eventName - the event name
    * @param value - a value of any type
+   * @returns {void}
    */
   MaggaMediator.prototype.publish = function (eventName, value) {
     if (typeof eventName !== "string") {

@@ -2,7 +2,7 @@
 
 /**
  * Plugin API to register a plugin
- * @param  {[type]} plugin [description]
+ * @param  {[type]} pluginDefinition [description]
  * @return {[type]}        [description]
  */
 module.exports = function plugin(plugin) {
@@ -31,3 +31,4 @@ module.exports = function plugin(plugin) {
   }
 
 };
+

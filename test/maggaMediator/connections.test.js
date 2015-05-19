@@ -21,12 +21,16 @@ describe.only('connections', function() {
 
   describe('client should connect & publish', function() {
     if ((typeof (isBrowser) !== 'undefined') && isBrowser) {
-      var clientMediator = new MaggaMediator({plugins:['simple','sockjs']});
+      var clientMediator = null;
       it('client should connect', function() {
-        //clientMediator.plugin(sockjsClient);
+        clientMediator = new MaggaMediator({plugins:['simple','sockjs']});
+      });
+      it('client should subscribe', function() {
+        clientMediator.subscribe('publish', function() {
+          console.log('smthg published');
+        });
       });
       it('client should publish ', function() {
-        console.log("one step before publish");
         clientMediator.publish('publish',{foo:'bar'});
       });
     }

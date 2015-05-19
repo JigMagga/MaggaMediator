@@ -1,4 +1,4 @@
-# MaggaMediator
+# MaggaMediator [![Build Status](https://travis-ci.org/JigMagga/MaggaMediator.svg?branch=master)](https://travis-ci.org/JigMagga/MaggaMediator)
 The MaggaMediator is the heart of JigMagga. Its job is to provide an communication layer.
 
 ## Usage

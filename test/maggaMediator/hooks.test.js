@@ -3,9 +3,9 @@
 var MaggaMediator = require('maggaMediator.js');
 
 
-describe.only('hooks', function () {
-  var hooks = require('hooks.test.js');
+describe('hooks', function () {
   MaggaMediator = new MaggaMediator();
+  var hooks = require('hooks.js')(MaggaMediator);
   MaggaMediator.subscribe('channel:one', function () {
     console.log("smthg published");
   });

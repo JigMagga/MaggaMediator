@@ -60,6 +60,17 @@ var DEFAULT_CONFIG = {
     }
   };
 
+  MaggaMediator.prototype._dispatchAction = function (action,eventName,data) {
+    var self = this;
+    if (EventEmitter.listenerCount(self, 'dispatch')) {
+      self.emit('dispatch', action, eventName, function(resolvedEventName){
+        self.emit(action, resolvedEventName, data);
+      })}
+    else{
+      self.emit(action, eventName, data);
+    }
+  };
+
 
   /**
    * Subscribe "subscriber" to a event using a callback
@@ -74,26 +85,8 @@ var DEFAULT_CONFIG = {
     }
     if (typeof cb !== "function") {
       throw new Error('[MaggaMediator.subscribe] Second argument must be a function');
-
     }
-
-    self = this;
-
-    // If we have a system of eventNames location then we use it.
-    // Otherwise we just wrap the name into the Array
-    if (typeof self.eventNames !== 'undefined') {
-      eventNames = self.eventNames.find(eventName);
-    }
-    else eventNames = [eventName];
-
-    // If we have a system of permissions then we use it.
-    if (typeof self.permissions !== 'undefined') {
-      eventNames = self.permissions.filter(eventNames,'subscribe');
-    }
-
-    eventNames.forEach(function (eventNameItem) {
-      self.emit('subscribe', eventNameItem, cb);
-    })
+    this._dispatchAction('subscribe',eventName,cb);
   };
 
   /**
@@ -103,25 +96,14 @@ var DEFAULT_CONFIG = {
    * @returns {void}
    */
   MaggaMediator.prototype.unsubscribe = function (eventName, cb) {
-    var self,eventNames;
-
-    self = this;
-
-    // If we have a system of eventNames location then we use it.
-    // Otherwise we just wrap the name into the Array
-    if (typeof self.eventNames !== 'undefined') {
-      eventNames = self.eventNames.find(eventName);
+    if (typeof eventName !== "string") {
+      throw new Error("[MaggaMediator.subscribe] event name must be string");
     }
-    else eventNames = [eventName];
-
-    // If we have a system of permissions then we use it.
-    if (typeof self.permissions !== 'undefined') {
-      eventNames = self.permissions.filter(eventNames,'unsubscribe');
+    if (typeof cb !== "function") {
+      throw new Error('[MaggaMediator.subscribe] Second argument must be a function');
     }
 
-    eventNames.forEach(function (eventNameItem) {
-      self.emit('unsubscribe', eventNameItem, cb);
-    })
+    this._dispatchAction('unsubscribe',eventName,cb);
   };
 
   /**
@@ -137,23 +119,7 @@ var DEFAULT_CONFIG = {
     var self,eventNames;
 
     self = this;
-
-    // If we have a system of eventNames location then we use it.
-    // Otherwise we just wrap the name into the Array
-    if (typeof self.eventNames !== 'undefined') {
-      eventNames = self.eventNames.find(eventName);
-    }
-    else eventNames = [eventName];
-
-    // If we have a system of permissions then we use it.
-    if (typeof self.permissions !== 'undefined') {
-      eventNames = self.permissions.filter(eventNames,'publish');
-    }
-
-    eventNames.forEach(function (eventNameItem) {
-      self.emit('publish', eventNameItem, value);
-    })
-
+    this._dispatchAction('publish',eventName,value);
   };
 
   /**

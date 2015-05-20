@@ -10,7 +10,7 @@ describe('Permitions Simple', function() {
     callbackOne = function(msg){ mediatorListnerOne.push(msg)};
 
   var maggaMediator = new MaggaMediator({
-    plugins:['simple','permissionsSimple'],
+    plugins:['simple','permissionsSimple','dispatcherSimple'],
     permissions:{
       "*":false,
       "eventnames":{

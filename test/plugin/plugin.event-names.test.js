@@ -5,7 +5,7 @@ describe('Event names Simple', function() {
     EVENT_NAME_TWO = 'EventTwo';
 
 
-  var maggaMediator = new MaggaMediator({plugins:['simple','eventNamesSimple']});
+  var maggaMediator = new MaggaMediator({plugins:['simple','dispatcherSimple','eventNamesSimple']});
   describe('EventNames in maggaMediator exists', function() {
     it('should EventNames exist',function(){
       expect(maggaMediator).to.have.property('eventNames');

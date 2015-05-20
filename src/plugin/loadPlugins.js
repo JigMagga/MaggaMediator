@@ -51,6 +51,10 @@ module.exports = function loadPlugins(plugins) {
       case 'permissionsSimple':
         self.plugin(require('../../plugins/permissionsSimple.js'));
         break;
+      case 'dispatcherSimple':
+        self.plugin(require('../../plugins/dispatcherSimple.js'));
+        break;
+
       default:
         throw Error("No plugin for "+value+" found");
     }

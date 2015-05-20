@@ -30,19 +30,19 @@ describe('connections', function () {
       it('should connect', function () {
         var serverMediator = new MaggaMediator(sockjspluginConfig);
         clientMediator = new MaggaMediator(sockjspluginConfig);
-        clientMediator.subscribe('publish1', function () {
+        clientMediator.subscribe('publish', function () {
           console.log('subscribed to a publish event');
           clientMediator.publish('publish1', {foo: 'bar'});
         });
       });
       it('should subscribe', function () {
-        clientMediator.subscribe('publish1', function () {
+        clientMediator.subscribe('publish', function () {
           console.log('subscribed to a publish event');
         });
       });
       it.skip('should publish ', function () {
         clientMediator = new MaggaMediator(sockjspluginConfig);
-        clientMediator.publish('publish1', {foo: 'bar'});
+        clientMediator.publish('publish', {foo: 'bar'});
       });
     }
   });

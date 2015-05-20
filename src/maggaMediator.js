@@ -46,7 +46,6 @@ var DEFAULT_CONFIG = {
    * @type {[type]}
    */
   MaggaMediator.prototype.plugin = require("./plugin/plugin.js");
-
   MaggaMediator.prototype._loadPlugins = require("./plugin/loadPlugins.js");
 
   MaggaMediator.prototype.init = function () {

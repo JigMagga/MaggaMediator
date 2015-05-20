@@ -179,5 +179,10 @@ var DEFAULT_CONFIG = {
     }
   }
 
+  var hooks = require("hooks.js");
+  MaggaMediator.prototype.on = hooks.on;
+  MaggaMediator.prototype.off = hooks.off;
+  MaggaMediator.prototype.once = hooks.once;
+
   return MaggaMediator;
 }));

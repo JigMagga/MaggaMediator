@@ -1,39 +1,16 @@
 'use strict';
-
-var hooksLogic = {
-  subscribe: {
-    onHooks : function () {console.log('on subscribe'); },
-    offHooks : function () {console.log('off subscribe'); },
-    onceHooks : function () {console.log('once subscribe'); }
+module.exports = {
+  on: function (eventname, listener) {
+    this.on(eventname, listener);
   },
-  publish: {
-    onHooks : function () {console.log('on publish'); },
-    offHooks : function () {console.log('on publish'); },
-    onceHooks : function () {console.log('once publish'); }
+  off: function (eventname, listener) {
+    if (typeof listener === 'function') {
+      this.removeListener(eventname, listener);
+    } else {
+      this.removeAllListeners(eventname);
+    }
   },
-  unsubscribe: {
-    onHooks : function () {console.log('on unsubscribe'); },
-    offHooks : function () {console.log('off unsubscribe'); },
-    onceHooks : function () {console.log('once unsubscribe'); }
+  once: function (eventname, listener) {
+    this.once(eventname, listener);
   }
-};
-
-module.exports = function hook(MaggaMediator) {
-  ['publish', 'subscribe', 'unsubscribe'].forEach(function (eventName) {
-    MaggaMediator.on(eventName, function (data) {
-      if (typeof hooksLogic[eventName].onHooks === 'function') {
-        hooksLogic[eventName].onHooks(data);
-      }
-    });
-    MaggaMediator.removeListener(eventName, function (data) {
-      if (typeof hooksLogic[eventName].offHooks === 'function') {
-        hooksLogic[eventName].offHooks(data);
-      }
-    });
-    MaggaMediator.once(eventName, function (data) {
-      if (typeof hooksLogic[eventName].onceHooks === 'function') {
-        hooksLogic[eventName].onceHooks(data);
-      }
-    });
-  });
 };

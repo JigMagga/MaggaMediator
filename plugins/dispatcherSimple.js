@@ -3,7 +3,7 @@ module.exports = {
   init: function (mediator) {
     mediator.on('dispatch', function (action, eventName, cb) {
       var resolvedEventNames, eventNames;
-      console.log('dispatch ', action,' for ', eventName);
+      console.log('dispatcher: ', action,' for ', eventName,'\n');
 
       // If we have a system of eventNames location then we use it.
       // Otherwise we just wrap the name into the Array
@@ -11,6 +11,12 @@ module.exports = {
         eventNames = mediator.eventNames.find(eventName);
       }
       else eventNames = [eventName];
+
+      // a fix for the case when we don't find any name
+      // then we provide input eventName for the action (e.g. the action is subscribe)
+      if (eventNames.length === 0) {
+        eventNames = [eventName];
+      }
 
       // If we have a system of permissions then we use it.
       if (typeof mediator.permissions !== 'undefined') {

@@ -1,62 +1,10 @@
 
-module.exports = {
-
-  init: function(mediator){
-    //var sockJsServer = require("sockJsServer");
-    //var config = mediator.config();
-
-    // init the sock js listening based on configuration (host, port)
-    // sockjs.listen(config.port, config.ip)
-    //
-    // sockjs.on("open", function(){
-    //
-    // 	save the connection
-    // 	conn.on(data, function(data){
-    // 		mediator.emit(data.eventname, data.data);
-    // 	})
-    //
-    // })
-    if (typeof mediator.eventNames === 'undefined') {
-      mediator.eventNames = {};
-    }
-
-    // In this implementation eventNames are just an Array
-    mediator.eventNames._eventNames = new MaggaEventNames();
-
-    // Save the ref for future use
-    var _eventNames = mediator.eventNames._eventNames;
-
-    // Implementing add, find, erase operations
-    mediator.eventNames.add = function (eventName) {
-
-      _eventNames[eventName] = true;
-    };
-
-    mediator.eventNames.find = function (eventName) {
-      // we will  return [] or [eventName]
-      var result = [];
-      if (_eventNames[eventName]) {
-        result.push(eventName);
-      }
-      return result;
-    };
-
-    mediator.eventNames.erase = function (eventName) {
-      delete _eventNames[eventName];
-    };
-
-  }
-
-};
-
-
-function MaggaEventNames(initialObj){
-  if (!initialObj) {initialObj = {};}
-  this._eventNames = initialObj;
-  this.delimiter = '.';
+function NestedObjects(initialObj,delimiter){
+  this._nestedKeys = initialObj || {};
+  this.delimiter = delimiter || '.';
 }
 
-MaggaEventNames.prototype.add = function(node){
+NestedObjects.prototype.add = function(node){
   node
     .split(this.delimiter)
     .reduce(function(prevReduce,key){
@@ -64,58 +12,101 @@ MaggaEventNames.prototype.add = function(node){
         prevReduce[key] = {};
       }
       return prevReduce[key];
-    },this._eventNames);
-
+    },this._nestedKeys);
 
 };
 
-MaggaEventNames.prototype.find = function(pattern){
+NestedObjects.prototype.find = function(pattern){
   // Use this function to convert object-style nodes to []-style
   function nameRecursion (prefix, obj) {
     var isVoid = true;
     var result = [];
+    var newPrefix;
     for (var key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj,key)) {
         isVoid = false;
-        result = result.concat(nameRecursion(prefix.concat(self.delimiter,key),obj[key]));
+        // dont concatenate with void prefix
+        newPrefix = prefix !== "" ? prefix.concat(self.delimiter,key) : key;
+        // merge arrays by recursion
+        result = result.concat(nameRecursion(newPrefix,obj[key]));
       }
     }
     return isVoid? [prefix] : result;
   }
   var self = this;
+  var node;
 
   // Find node for pattern
-  var node = pattern
-    .split(this.delimiter)
-    .reduce(function(prevReduce,key){
-      return (typeof prevReduce[key] === 'undefined')?null:prevReduce[key];
-    },this._eventNames);
+  if (pattern !== undefined) {
+    node = pattern
+      .split(this.delimiter)
+      .reduce(function(prevReduce,key){
+        if(prevReduce === null) return null;
+        return (typeof prevReduce[key] === 'undefined')?null:prevReduce[key];
+      },this._nestedKeys);
+  }
+  else {
+    //if we didnt provide any key, then return the whole object
+    node = this._nestedKeys;
+  }
 
   // Return empty Array if no node for this pattern
   if (node === null) return [];
-  var currentPrefix = pattern;
-  return nameRecursion(pattern,node);
+  return nameRecursion(pattern || '',node);
 };
 
-MaggaEventNames.prototype.delete = function(pattern){
+NestedObjects.prototype.delete = function(pattern){
+  var deletingNode = pattern.split(this.delimiter);
+  // pop the last key to use it in delete
+  var deletingKey = deletingNode.pop();
+  //converting in node reference
+  deletingNode = deletingNode
+    .reduce(function(prevReduce,key){
+      if (typeof prevReduce[key] === 'undefined'){
+        return undefined;
+      }
+      return prevReduce[key];
+    },this._nestedKeys);
 
+  if (typeof deletingNode !== "undefined") {
+    delete deletingNode[deletingKey];
+  }
 };
 
 
-var eventNames = new MaggaEventNames();
+module.exports = {
 
-eventNames.add('foo.oft.bar.baz');
-eventNames.add('foo.oft.bar');
-eventNames.add('foo.oft.bal.ban');
-eventNames.add('foo.oft.bal');
-eventNames.add('foo.oft.bal.bak');
-eventNames.add('foo.oft.bat');
-eventNames.add('foo.oft.bay');
+  init: function(mediator){
+
+    if (typeof mediator.eventNames === 'undefined') {
+      mediator.eventNames = new NestedObjects();
+    }
+
+    mediator.on('subscribe',function(eventName){
+      mediator.eventNames.add(eventName);
+    });
+
+  //  // In this implementation eventNames are just an Array
+  //  mediator.eventNames = new NestedObjects();
+  //
+  //  // Save the ref for future use
+  //  var _eventNames = mediator.eventNames._nestedKeys;
+  //
+  //  // Implementing add, find, erase operations
+  //  mediator.eventNames.add = function (eventName) {
+  //
+  //    _eventNames.add(eventName);
+  //  };
+  //
+  //  mediator.eventNames.find = _eventNames.find;
+  //
+  //  mediator.eventNames.erase = _eventNames.delete;
+  }
+
+};
+//
 
 
-console.log(eventNames._eventNames);
-
-console.log('find result ',eventNames.find('foo.oft'));
 
 
 

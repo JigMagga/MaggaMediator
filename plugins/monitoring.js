@@ -1,11 +1,11 @@
 // TODO: Functionality for monitoring. In progress.
 // with plugins for internal communications maybe we could get rid of it
 
-function Monitor(){
+function Monitor() {
     this._handlers = {};
 }
 
-Monitor.prototype._addHandler = function(cb){
+Monitor.prototype._addHandler = function (cb) {
     var self = this;
     this._handlers[cb] = function (ev, val) {
         self._callbackQueue(eventName, handler);
@@ -31,8 +31,8 @@ Monitor.prototype.attr = function attr(attribute, value){
         this[attribute] = value;
     }
 };
-Monitor.prototype.bind = function(){};
-Monitor.prototype.unbind = function(){};
+Monitor.prototype.bind = function () {};
+Monitor.prototype.unbind = function () {};
 // temporary stubs for canjs.map compatibility
 
 /**
@@ -42,16 +42,16 @@ Monitor.prototype.unbind = function(){};
 Monitor.prototype.monitor = function (cb) {
     var self = this,
         selfArr;
-    if (typeof cb === "string") {
-        //self[cb].bind("time", function () {
-        //    self._logEvent(cb);
-        //});
+    if (typeof cb === 'string') {
+        // self[cb].bind("time", function () {
+        //     self._logEvent(cb);
+        // });
     } else {
-        if (typeof cb === "function") {
+        if (typeof cb === 'function') {
             self.monitorCallback.push(cb);
-            self.monitorMethod = "_callbackQueue";
+            self.monitorMethod = '_callbackQueue';
         } else {
-            self.monitorMethod = "_logEvent";
+            self.monitorMethod = '_logEvent';
         }
         selfArr = self.__get();
         for (var eventName in selfArr) {

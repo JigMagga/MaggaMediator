@@ -32,28 +32,30 @@ We want to keep the spirit of loosly coupled. We divided Mediator in different p
 
 ### Inner Transport plugins
 These plugins provides storage for callbacks from Jigs  
-* __simple__
-* __baconjs__
+* __simple__  Simple object used to store callbacks in key-value style.
+* __baconjs__ For each channel `Bacon.EventStream` would be created. Also, all channels stored as `Bacon.Bus()`
 
 ### Outer Transport plugins
 Plugins from this set serve as communication transports between MaggaMediators.
-* __sockjs__
+* __sockjs__ Sock.js used to organize transportation of events to other Mediators.
 
 ### Dispatcher plugins
 Plugins that provide additional functionality like permitions or namespaces for events.
-* __dispatcherSimple__
+* __dispatcherSimple__ Tiny implementation. Only checks and calls.
 
 ### Event naming plugins
 Dispatchers uses this plugins to resolve particular names of events from recieved patterns of actions. 
-* __eventNamesSimple__
+* __eventNamesSimple__ Stores structure in nested object (`{foo:{bar:{bal:{},bot:{}},baz:{}}}`). Provides   
+  `.find()`   method, that returnes all nodes resolved by pattern. `.find('foo.bar')` will return
+  `['foo.bar','foo.bar.bal','foo.bar.bot']`
 
 ### ACL plugins
 Dispatchers uses this plugins to resolve permitions for particular events. 
-* __permissionsSimple__
+* __permissionsSimple__ Stores permissions in as key-values in internal Object.
 
 ### Service plugins
 * __monitoring__ Provides debugging tools.
-* __hooks__ frovides EventEmitter methods .on() .once() .off() .emit() to the Mediator.
+* __hooks__ frovides EventEmitter methods `.on()` `.once()` `.off()` `.emit()` to the Mediator.
 
 
 ##Configuration

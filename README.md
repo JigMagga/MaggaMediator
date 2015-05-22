@@ -25,7 +25,30 @@ npm test
 By default tests run in node and chrome.
 
 ##Plugins
-TBD
+We want to keep the spirit of loosly coupled. We divided Mediator in different parts and implemented its functionality by plugins. 
+
+### Inner Transport plugins
+These plugins provides storage for callbacks from Jigs  
+* __simple__
+* __baconjs__
+
+### Outer Transport plugins
+Plugins from this set serve as communication transports between MaggaMediators.
+* __sockjs__
+
+### Dispatcher plugins
+Plugins that provide additional functionality like permitions or namespaces for events.
+* __dispatcherSimple__
+### Event naming plugins
+Dispatchers uses this plugins to resolve particular names of events from recieved patterns of actions. 
+* __eventNamesSimple__
+### ACL plugins
+Dispatchers uses this plugins to resolve permitions for particular events. 
+* __permissionsSimple__
+### Service plugins
+* __monitoring__ Provides debugging tools.
+* __hooks__ frovides EventEmitter methods .on() .once() .off() .emit() to the Mediator.
+
 
 ##Configuration
 

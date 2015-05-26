@@ -14,13 +14,15 @@ module.exports = {
         SockjsClient = require('sockjs-client');
         transport.sockjsClient = new SockjsClient(path);
         transport.sockjsClient.onopen = function () {
-            console.log('open');
-        };
-        transport.sockjsClient.onmessage = function (e) {
-            console.log('message', e.data);
+//            console.log('open');
+            transport.sockjsClient.onmessage = function (e) {
+//            console.log('message', e.data);
+
+            };
         };
         transport.sockjsClient.onclose = function () {
-            console.log('close');
+//            console.log('close');
+            delete mediator._outerTransport;
         };
     },
     publish: function () {

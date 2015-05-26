@@ -20,12 +20,12 @@ module.exports = {
                 sockjs_url: 'http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js'
             }
         );
-        transport.echo.on('connection', function (conn) {
+        transport.echo.on('connection', function (sockjsClient) {
             transport.currentConn = sockjsClient;
 //            transport.connections.push(transport.currentConn);
             transport.currentConn.on('data', function (message) {
                 console.log('some data');
-                transport.currentConn.write(message);
+//                transport.currentConn.write(message);
             });
             transport.currentConn.on('close', function () {
             });
@@ -37,13 +37,8 @@ module.exports = {
         console.log('listening on port: ' + connConfig.host + ':' + connConfig.port + ' ');
     },
     publish: function (event, data) {
-        var permissions = this.config().plugins.sockjs.permissions,
-            transport = this._outerTransport;
-        if (
-            permissions && (
-            permissions.publish !== 'local' ||
-            permissions.publish !== 'off'
-            )) {
+        var transport = this._outerTransport;
+        if (typeof transport.currentConn !== 'undefined') {
             transport.currentConn.write({event: event, data: data, target: transport.id});
         }
     }

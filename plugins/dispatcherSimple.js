@@ -30,5 +30,6 @@ module.exports = {
                 cb.call(mediator, resolvedEventName);
             });
         });
+        mediator._hasDispatcher = true;
     }
 };

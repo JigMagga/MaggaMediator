@@ -26,10 +26,7 @@ var DEFAULT_CONFIG = {
     return consoleMsg;
 //    console.log(consoleMsg);
 }(this, function () {
-    var util = require('util'),
-        EventEmitter = require('events').EventEmitter,
-        hooks = require('hooks.js');
-
+    var hooks = require('hooks.js');
 
     function MaggaMediator(configObj) {
         // Mediator.apply(this,arguments);
@@ -37,9 +34,6 @@ var DEFAULT_CONFIG = {
         this.config(configObj || DEFAULT_CONFIG);
         this.init();
     }
-
-// extend MaggaMediator with EventEmitter
-    util.inherits(MaggaMediator, EventEmitter);
 
     /**
      * Plugin API to register a plugin on the mediator
@@ -51,6 +45,7 @@ var DEFAULT_CONFIG = {
     MaggaMediator.prototype.init = function () {
         var self = this;
         var config = self._config;
+        hooks.init(self);
         if (typeof config.plugins !== 'undefined') {
             self._loadPlugins(config.plugins);
         }
@@ -61,7 +56,7 @@ var DEFAULT_CONFIG = {
 
     MaggaMediator.prototype._dispatchAction = function (action, eventName, data) {
         var self = this;
-        if (EventEmitter.listenerCount(self, 'dispatch')) {
+        if (self._hasDispatcher) {
             self.emit('dispatch', action, eventName, function (resolvedEventName) {
                 self.emit(action, resolvedEventName, data);
             });
@@ -141,10 +136,5 @@ var DEFAULT_CONFIG = {
         }
         return result;
     };
-
-    // MaggaMediator.prototype.on = hooks.on;
-    MaggaMediator.prototype.off = hooks.off;
-    MaggaMediator.prototype.once = hooks.once;
-
     return MaggaMediator;
 }));

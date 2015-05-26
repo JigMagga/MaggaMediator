@@ -6,6 +6,7 @@
         "mocha": true
     },
     "globals": {
+        "define":true,
         "chai": true,
         "assert": true,
         "expect":true

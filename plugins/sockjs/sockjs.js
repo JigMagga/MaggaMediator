@@ -1,8 +1,6 @@
-'use strict';
-
 module.exports = function () {
-  if (typeof process !== 'undefined' && process.title.search('node') !== -1) {
-    return require('./server.js');
-  }
-  return require('./client.js');
+    if (typeof process !== 'undefined' && process.title.search('node') !== -1) {
+        return require('./server.js');
+    }
+    return require('./client.js');
 };

@@ -1,4 +1,5 @@
-var Bacon = require('baconjs').Bacon;
+var Bacon = require('baconjs').Bacon,
+    MaggaData = require('maggaData.js');
 
 module.exports = {
     init: function (mediator) {
@@ -31,13 +32,17 @@ module.exports = {
             bacon.event[eventName] = {
                 _eventStream:
                     Bacon.fromEvent(this, 'publish', function (eventEventName, eventValue) {
+                        var result = null;
                         // transforming to one object
                         // We need event to filter it
                         // Then we will take only value
-                        return {
-                            event: eventEventName,
-                            value: eventValue
-                        };
+                        if (eventValue instanceof MaggaData) {
+                            result = {
+                                event: eventEventName,
+                                value: eventValue.getData()
+                            }
+                        }
+                        return result;
                     })
                         .filter(function (e) {
                             return e.event === eventName;

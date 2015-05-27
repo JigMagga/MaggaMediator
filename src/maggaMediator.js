@@ -27,6 +27,7 @@ var DEFAULT_CONFIG = {
 //    console.log(consoleMsg);
 }(this, function () {
     var hooks = require('hooks.js');
+    var MaggaData = require('maggaData.js');
 
     function MaggaMediator(configObj) {
         // Mediator.apply(this,arguments);
@@ -106,11 +107,17 @@ var DEFAULT_CONFIG = {
      * @returns {void}
      */
     MaggaMediator.prototype.publish = function (eventName, value) {
-        var self = this;
+        var self = this,
+            data;
         if (typeof eventName !== 'string') {
             throw new Error('Event name must be string');
         }
-        self._dispatchAction('publish', eventName, value);
+        if (!(value instanceof MaggaData)) {
+            data = new MaggaData(value);
+        } else {
+            data = value;
+        }
+        self._dispatchAction('publish', eventName, data);
     };
 
     /**

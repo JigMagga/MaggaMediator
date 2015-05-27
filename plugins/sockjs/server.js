@@ -1,4 +1,4 @@
-
+var MaggaData = require('maggaData.js');
 module.exports = {
     init: function (mediator) {
         var http, sockjs, config, connConfig, transport;
@@ -24,21 +24,21 @@ module.exports = {
             }
         );
         transport.echo.on('connection', function (sockjsClient) {
-            var msg;
+            var msg, data, eventName, action;
             transport.connections.push(sockjsClient);
             sockjsClient.on('data', function (message) {
                 console.log('some data', message);
                 try {
                     msg = JSON.parse(message);
-                    if (typeof msg.action !== 'undefined'
-                        && msg.action === 'publish'
-                        && msg.data
-                        && msg.data._context
-                        && msg.data._context.source !== transport.id) {
+                    action = msg.action;
+                    eventName = msg.eventName;
+                    data = new MaggaData(msg.data);
+                    if (action === 'publish'
+                        && data.getContext('source') !== transport.id) {
                         if (typeof msg.eventName === 'undefined') {
                             throw Error('[Incomint message] Undefined EventName');
                         }
-                        mediator.publish(msg.eventName, msg.data);
+                        mediator.publish(eventName, data);
                     }
                 } catch (err) {
                     if (err instanceof SyntaxError) {
@@ -64,19 +64,20 @@ module.exports = {
     publish: function (event, data) {
         var transport = this._outerTransport;
 
+        if (!(data instanceof MaggaData)) {
+            throw TypeError('data parameter doesn\'t have type of MaggaData');
+        }
+
         // Enrich _context with source
-        if (typeof data._context === 'undefined') {
-            data._context = {};
+        if (data.getContext('source') === null) {
+            data.setContext('source', transport.id);
         }
         console.log(data);
-        if (typeof data._context.source === 'undefined') {
-            data._context.source = transport.id;
-        }
 
         transport.connections.forEach(function (currentConn) {
             var msg;
             if (typeof currentConn !== 'undefined') {
-                msg = JSON.stringify({action:'publish', eventName: event, data: data});
+                msg = JSON.stringify({action: 'publish', eventName: event, data: data});
                 currentConn.write(msg);
             }
         });

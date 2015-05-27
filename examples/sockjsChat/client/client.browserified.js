@@ -66,7 +66,7 @@ $("#form").submit(function(e){
     sock.send(message);
     $("#msg").first().val("");
 });
-},{"maggaMediator.js":288}],2:[function(require,module,exports){
+},{"maggaMediator.js":289}],2:[function(require,module,exports){
 (function (global){
 (function() {
   var Bacon, BufferingSource, Bus, CompositeUnsubscribe, ConsumingSource, Desc, Dispatcher, End, Error, Event, EventStream, Exception, Initial, Next, None, Observable, Property, PropertyDispatcher, Some, Source, UpdateBarrier, _, addPropertyInitValueToStream, assert, assertArray, assertEventStream, assertFunction, assertNoArguments, assertObservable, assertObservableIsProperty, assertString, cloneArray, constantToFunction, containsDuplicateDeps, convertArgsToFunction, describe, endEvent, eventIdCounter, eventMethods, findDeps, findHandlerMethods, flatMap_, former, idCounter, initialEvent, isArray, isFieldKey, isObservable, latter, liftCallback, makeFunction, makeFunctionArgs, makeFunction_, makeObservable, makeSpawner, nextEvent, nop, partiallyApplied, recursionDepth, ref, registerObs, spys, toCombinator, toEvent, toFieldExtractor, toFieldKey, toOption, toSimpleExtractor, valueAndEnd, withDescription, withMethodCallSupport,
@@ -33596,7 +33596,8 @@ module.exports = Extensions;
 }).call(this);
 
 },{}],278:[function(require,module,exports){
-var Bacon = require('baconjs').Bacon;
+var Bacon = require('baconjs').Bacon,
+    MaggaData = require('maggaData.js');
 
 module.exports = {
     init: function (mediator) {
@@ -33629,13 +33630,17 @@ module.exports = {
             bacon.event[eventName] = {
                 _eventStream:
                     Bacon.fromEvent(this, 'publish', function (eventEventName, eventValue) {
+                        var result = null;
                         // transforming to one object
                         // We need event to filter it
                         // Then we will take only value
-                        return {
-                            event: eventEventName,
-                            value: eventValue
-                        };
+                        if (eventValue instanceof MaggaData) {
+                            result = {
+                                event: eventEventName,
+                                value: eventValue.getData()
+                            }
+                        }
+                        return result;
                     })
                         .filter(function (e) {
                             return e.event === eventName;
@@ -33669,7 +33674,7 @@ module.exports = {
     // publish: function(eventName, value){}
 };
 
-},{"baconjs":2}],279:[function(require,module,exports){
+},{"baconjs":2,"maggaData.js":288}],279:[function(require,module,exports){
 module.exports = {
 
     init: function (mediator) {
@@ -33909,6 +33914,7 @@ module.exports = {
 };
 
 },{}],283:[function(require,module,exports){
+var MaggaData = require('maggaData.js');
 module.exports = {
 
     init: function (mediator) {
@@ -33969,13 +33975,15 @@ module.exports = {
                 if (typeof cb !== 'function') {
                     throw new Error('Subscriber is not a function.');
                 }
-                cb.call(transport, value);
+                if (value instanceof MaggaData) {
+                    cb.call(transport, value.getData());
+                }
             });
         }
     }
 };
 
-},{}],284:[function(require,module,exports){
+},{"maggaData.js":288}],284:[function(require,module,exports){
 module.exports = {
     init: function (mediator) {
         var config, connConfig, path, SockjsClient, transport;
@@ -34039,7 +34047,7 @@ module.exports = {
 };
 
 },{"sockjs-client":176}],285:[function(require,module,exports){
-
+var MaggaData = require('maggaData.js');
 module.exports = {
     init: function (mediator) {
         var http, sockjs, config, connConfig, transport;
@@ -34065,21 +34073,21 @@ module.exports = {
             }
         );
         transport.echo.on('connection', function (sockjsClient) {
-            var msg;
+            var msg, data, eventName, action;
             transport.connections.push(sockjsClient);
             sockjsClient.on('data', function (message) {
                 console.log('some data', message);
                 try {
                     msg = JSON.parse(message);
-                    if (typeof msg.action !== 'undefined'
-                        && msg.action === 'publish'
-                        && msg.data
-                        && msg.data._context
-                        && msg.data._context.source !== transport.id) {
+                    action = msg.action;
+                    eventName = msg.eventName;
+                    data = new MaggaData(msg.data);
+                    if (action === 'publish'
+                        && data.getContext('source') !== transport.id) {
                         if (typeof msg.eventName === 'undefined') {
                             throw Error('[Incomint message] Undefined EventName');
                         }
-                        mediator.publish(msg.eventName, msg.data);
+                        mediator.publish(eventName, data);
                     }
                 } catch (err) {
                     if (err instanceof SyntaxError) {
@@ -34105,26 +34113,27 @@ module.exports = {
     publish: function (event, data) {
         var transport = this._outerTransport;
 
+        if (!(data instanceof MaggaData)) {
+            throw TypeError('data parameter doesn\'t have type of MaggaData');
+        }
+
         // Enrich _context with source
-        if (typeof data._context === 'undefined') {
-            data._context = {};
+        if (data.getContext('source') === null) {
+            data.setContext('source', transport.id);
         }
         console.log(data);
-        if (typeof data._context.source === 'undefined') {
-            data._context.source = transport.id;
-        }
 
         transport.connections.forEach(function (currentConn) {
             var msg;
             if (typeof currentConn !== 'undefined') {
-                msg = JSON.stringify({action:'publish', eventName: event, data: data});
+                msg = JSON.stringify({action: 'publish', eventName: event, data: data});
                 currentConn.write(msg);
             }
         });
     }
 };
 
-},{"http":147,"sockjs":238}],286:[function(require,module,exports){
+},{"http":147,"maggaData.js":288,"sockjs":238}],286:[function(require,module,exports){
 (function (process){
 module.exports = function () {
     if (typeof process !== 'undefined' && process.title.search('node') !== -1) {
@@ -34148,6 +34157,34 @@ module.exports = {
 };
 
 },{"events":146}],288:[function(require,module,exports){
+// TODO Implement data envelope in a right way
+
+function MaggaData(data) {
+    if (typeof data === 'object' && data._md === 1) {
+        this._data = data._data;
+        this._context = data._context;
+    } else {
+        this._data = data;
+        this._context = {};
+    }
+    this._md = 1;
+}
+
+MaggaData.prototype.getData = function () {
+    return this._data;
+};
+
+MaggaData.prototype.getContext = function (contextKey) {
+    return this._context[contextKey];
+};
+
+MaggaData.prototype.setContext = function (contextKey, value) {
+    this._context[contextKey] = value;
+};
+
+module.exports = MaggaData;
+
+},{}],289:[function(require,module,exports){
 var DEFAULT_CONFIG = {
     plugins: ['simple', 'monitoring']
     // ,external: [{"transport":"socks","address":"localhost","port":"99999"}]
@@ -34177,6 +34214,7 @@ var DEFAULT_CONFIG = {
 //    console.log(consoleMsg);
 }(this, function () {
     var hooks = require('hooks.js');
+    var MaggaData = require('maggaData.js');
 
     function MaggaMediator(configObj) {
         // Mediator.apply(this,arguments);
@@ -34256,11 +34294,17 @@ var DEFAULT_CONFIG = {
      * @returns {void}
      */
     MaggaMediator.prototype.publish = function (eventName, value) {
-        var self = this;
+        var self = this,
+            data;
         if (typeof eventName !== 'string') {
             throw new Error('Event name must be string');
         }
-        self._dispatchAction('publish', eventName, value);
+        if (!(value instanceof MaggaData)) {
+            data = new MaggaData(value);
+        } else {
+            data = value;
+        }
+        self._dispatchAction('publish', eventName, data);
     };
 
     /**
@@ -34289,7 +34333,7 @@ var DEFAULT_CONFIG = {
     return MaggaMediator;
 }));
 
-},{"./plugin/loadPlugins.js":289,"./plugin/plugin.js":290,"hooks.js":287}],289:[function(require,module,exports){
+},{"./plugin/loadPlugins.js":290,"./plugin/plugin.js":291,"hooks.js":287,"maggaData.js":288}],290:[function(require,module,exports){
 /**
  * loads a plugin from the provised list of names
  * use it like Mediator.load(['simple','monitoring'])
@@ -34344,7 +34388,7 @@ module.exports = function loadPlugins(plugins) {
     });
 };
 
-},{"../../plugins/baconjs.js":278,"../../plugins/dispatcherSimple.js":279,"../../plugins/eventNamesSimple.js":280,"../../plugins/monitoring.js":281,"../../plugins/permissionsSimple.js":282,"../../plugins/simple.js":283,"../../plugins/sockjs/sockjs.js":286}],290:[function(require,module,exports){
+},{"../../plugins/baconjs.js":278,"../../plugins/dispatcherSimple.js":279,"../../plugins/eventNamesSimple.js":280,"../../plugins/monitoring.js":281,"../../plugins/permissionsSimple.js":282,"../../plugins/simple.js":283,"../../plugins/sockjs/sockjs.js":286}],291:[function(require,module,exports){
 /**
  * Plugin API to register a plugin
  * @param  {[type]} plugin [pass a custom plugin]

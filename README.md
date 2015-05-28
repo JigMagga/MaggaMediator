@@ -122,8 +122,9 @@ _Instantiate publishing_
     mediator.publish('chatChannel',msg);
 ```
 Enjoy your chat:
-![picture is missing][sockjsChat]
-[sockjsChat]: https://github.com/JigMagga/MaggaMediator/blob/master/img/MaggaMediator-sockjsChat.png "MaggaMediator simple chat"
+
+<img id="sockjsChat" src="https://github.com/JigMagga/MaggaMediator/blob/master/img/MaggaMediator-sockjsChat.png" width="600">
+
 
 
 __Setting up__

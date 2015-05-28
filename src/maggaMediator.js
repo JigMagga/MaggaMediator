@@ -26,8 +26,8 @@ var DEFAULT_CONFIG = {
     return consoleMsg;
 //    console.log(consoleMsg);
 }(this, function () {
-    var hooks = require('hooks.js');
-    var Unit = require('unit.js');
+    var hooks = require('./hooks.js');
+    var Unit = require('./unit.js');
 
     function MaggaMediator(configObj) {
         // Mediator.apply(this,arguments);

@@ -1,4 +1,4 @@
-var Unit = require('unit.js');
+var Unit = require('../../src/unit.js');
 module.exports = {
     init: function (mediator) {
         var config, connConfig, path, SockjsClient, transport;

@@ -1,5 +1,5 @@
 var Bacon = require('baconjs').Bacon,
-    Unit = require('unit.js');
+    Unit = require('../src/unit.js');
 
 module.exports = {
     init: function (mediator) {

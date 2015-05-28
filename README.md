@@ -91,13 +91,49 @@ var someSockMediator = new MaggaMediator({plugins:['simple','monitoring']});
 ```
 ##Examples
 ###sockjsChat
+MaggaMediator allows to create chat application in three simple steps:
+
+_Create a mediator_
+```
+var MaggaMediator = require('maggaMediator.js');
+mediator = new MaggaMediator({
+    plugins: {
+        sockjs: {
+            host: 'localhost',
+            port: 8080,
+            path: '/mediator'
+        }
+    },
+    loadPlugins: ['simple', 'monitoring']
+});
+```
+_Subscribe to channel_
+```
+mediator.subscribe('chatChannel', function(msg){
+    $("#chat").append('<p>' + msg.name + ' wrote: ' + msg.text + '</p>');
+});
+```
+_Instantiate publishing_
+```
+    msg = {
+        name: $("#name").first().val(),
+        text: $("#msg").first().val()
+    };
+    mediator.publish('chatChannel',msg);
+```
+Enjoy your chat:
+![picture is missing][sockjsChat]
+[sockjsChat]: https://github.com/JigMagga/MaggaMediator/blob/master/img/MaggaMediator-sockjsChat.png "MaggaMediator simple chat"
+
+
+__Setting up__
 To prepare client code for the example go to the folder of the project (e.g `~/repos/MaggaMediator`) and type
 ```
 NODE_PATH=./src ./node_modules/.bin/browserify ./examples/sockjsChat/client/client.js -o ./examples/sockjsChat/client/client.browserified.js
 ```
 To start server part type
 ```
-NODE_PATH="./src/" node ./examples/sockjsChat/server/dumSockJsServer.js
+NODE_PATH="./src/" node ./examples/sockjsChat/server/dummySockJsServer.js
 ```
 then open `./examples/sockjsChat/client/index.html` in several browsers and type messages
 

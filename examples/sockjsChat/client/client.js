@@ -1,5 +1,4 @@
 var MaggaMediator = require('maggaMediator.js');
-
 mediator = new MaggaMediator({
     plugins: {
         sockjs: {
@@ -36,11 +35,6 @@ $("#form").submit(function(e){
         text: $("#msg").first().val()
     };
     console.log('msg',msg);
-    message = JSON.stringify({
-        action:'publish',
-        eventName:'chatChannel',
-        data:msg
-    });
     mediator.publish('chatChannel',msg);
     $("#msg").first().val("");
 });

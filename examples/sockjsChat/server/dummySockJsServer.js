@@ -12,7 +12,8 @@ var dummyServer = new MaggaMediator({
     loadPlugins: ['monitoring']
 });
 
+
 setInterval(function () {
     var msg = 'Dummy message :'.concat(new Date(), ' ,', Math.random());
     dummyServer.publish('dummyChannel', msg);
-}, 10000);
+}, 30000);

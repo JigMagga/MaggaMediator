@@ -1,43 +1,18 @@
 var MaggaMediator = require('maggaMediator.js');
 
-function connect(sockClient) {
-    sockClient.onopen = function () {
-        console.log('connection opened');
-        sockClient.send(JSON.stringify({eventName: 'serviceChannel', data: 'test'}));
-    };
-    sockClient.onmessage = function (e) {
-        console.log('incoming message');
-        msg = JSON.parse(e.data);
-        console.log(msg);
-        if (typeof msg.event === 'string'
-            && msg.event === 'chatChannel') {
-            $("#chat").append('<p>' + msg.data.name + ' wrote: ' + msg.data.text + '</p>');
-        }
-
-    };
-    sockClient.onclose = function() {
-        console.log('connection closed');
-        setTimeout(function(){
-            console.log('Attempting to connect...');
-            var sock = new SockJS('http://localhost:8080/mediator');
-            connect(sock);
-        },5000);
-    };
-}
-
 mediator = new MaggaMediator({
     plugins: {
         sockjs: {
             host: 'localhost',
             port: 8080,
             path: '/mediator'
-        },
-        monitoring:{}
-    }
+        }
+    },
+    loadPlugins: ['simple', 'monitoring']
 });
 
-//var sock = new SockJS('http://localhost:8080/mediator');
-//connect(sock);
+// var sock = new SockJS('http://localhost:8080/mediator');
+// connect(sock);
 
 
 $("#name").first().val(function(){
@@ -46,7 +21,11 @@ $("#name").first().val(function(){
 }());
 
 mediator.subscribe('dummyChannel', function(msg){
-    console.log(msg);
+    console.log('From dummychannel ',msg);
+});
+
+mediator.subscribe('chatChannel', function(msg){
+    $("#chat").append('<p>' + msg.name + ' wrote: ' + msg.text + '</p>');
 });
 
 $("#form").submit(function(e){
@@ -62,6 +41,6 @@ $("#form").submit(function(e){
         eventName:'chatChannel',
         data:msg
     });
-    sock.send(message);
+    mediator.publish('chatChannel',msg);
     $("#msg").first().val("");
 });

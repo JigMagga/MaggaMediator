@@ -89,6 +89,17 @@ Alternatively, if your plugins doesn't need any options, you can enumerate them 
 ```
 var someSockMediator = new MaggaMediator({plugins:['simple','monitoring']});
 ```
+##Examples
+###sockjsChat
+To prepare client code for the example go to the folder of the project (e.g `~/repos/MaggaMediator`) and type
+```
+NODE_PATH=./src ./node_modules/.bin/browserify ./examples/sockjsChat/client/client.js -o ./examples/sockjsChat/client/client.browserified.js
+```
+To start server part type
+```
+NODE_PATH="./src/" node ./examples/sockjsChat/server/dumSockJsServer.js
+```
+then open `./examples/sockjsChat/client/index.html` in several browsers and type messages
 
 
 

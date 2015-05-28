@@ -1,3 +1,4 @@
+var Unit = require('unit.js');
 module.exports = {
     init: function (mediator) {
         var config, connConfig, path, SockjsClient, transport;
@@ -17,18 +18,18 @@ module.exports = {
 
         };
         transport.sockjsClient.onmessage = function (e) {
-            var msg;
-            console.log('incoming message');
+            var msg, action, eventName, data;
+            console.log('incoming message..', e);
             msg = JSON.parse(e.data);
-            console.log(msg);
-            // TODO !!! We need to invent reliable and robust system for preventing infinite loops
-            // and applying permissions.
-            // Now we publish event locally only if its source is external.
-            // Otherwise we will get infinite loop
-            if (typeof msg.event === 'string'
-                && msg._context
-                && msg._context.source !== transport.id) {
-                mediator.publish(msg.event, msg.data);
+            action = msg.action;
+            eventName = msg.eventName;
+            data = new Unit(msg.data);
+            if (action === 'publish'
+                && data.getContext('source') !== transport.id) {
+                if (typeof msg.eventName === 'undefined') {
+                    throw Error('[Incomint message] Undefined EventName');
+                }
+                mediator.publish(eventName, data);
             }
         };
         transport.sockjsClient.onclose = function () {
@@ -40,22 +41,22 @@ module.exports = {
         var config, permissions, transport, message;
         transport = this._outerTransport;
 
+        if (!(data instanceof Unit)) {
+            throw TypeError('data parameter doesn\'t have type of Unit');
+        }
+        console.log(data);
         // Enrich _context with source
-        if (typeof data._context === 'undefined') {
-            data._context = {};
-        }
+        if (typeof data.getContext('source') === 'undefined') {
+            data.setContext('source', transport.id);
 
-        if (typeof data._context.source === 'undefined') {
-            data._context.source = transport.id;
+            config = this.config();
+            permissions = config.plugins.sockjs.permissions;
+            message = JSON.stringify({
+                action: 'publish',
+                eventName: event,
+                data: data
+            });
+            transport.sockjsClient.send(message);
         }
-
-        config = this.config();
-        permissions = config.plugins.sockjs.permissions;
-        message = JSON.stringify({
-            action: 'publish',
-            eventName: event,
-            data: data
-        });
-        transport.sockjsClient.send(message);
     }
 };

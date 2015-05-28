@@ -69,7 +69,7 @@ module.exports = {
         }
 
         // Enrich _context with source
-        if (data.getContext('source') === null) {
+        if (typeof data.getContext('source') === 'undefined') {
             data.setContext('source', transport.id);
         }
         console.log(data);

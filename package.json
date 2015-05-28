@@ -1,5 +1,5 @@
 {
-    "name": "MaggaMediator",
+    "name": "magga-mediator",
     "description": "The MaggaMediator is the heart of JigMagga. Its job is to provide an communication layer.",
     "version": "0.0.1",
     "main": "src/maggaMediator.js",

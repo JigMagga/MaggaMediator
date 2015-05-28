@@ -2,7 +2,7 @@
     "name": "MaggaMediator",
     "description": "The MaggaMediator is the heart of JigMagga. Its job is to provide an communication layer.",
     "version": "0.0.1",
-    "main": "maggaMediator.js",
+    "main": "src/maggaMediator.js",
     "author": {
         "name": "yd. yourdelivery GmbH",
         "web": "http://www.lieferando.de/"

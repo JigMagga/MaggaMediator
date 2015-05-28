@@ -1,4 +1,4 @@
-var MaggaData = require('maggaData.js');
+var Unit = require('unit.js');
 module.exports = {
 
     init: function (mediator) {
@@ -59,7 +59,7 @@ module.exports = {
                 if (typeof cb !== 'function') {
                     throw new Error('Subscriber is not a function.');
                 }
-                if (value instanceof MaggaData) {
+                if (value instanceof Unit) {
                     cb.call(transport, value.getData());
                 }
             });

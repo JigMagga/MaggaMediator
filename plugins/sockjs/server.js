@@ -1,4 +1,4 @@
-var MaggaData = require('maggaData.js');
+var Unit = require('unit.js');
 module.exports = {
     init: function (mediator) {
         var http, sockjs, config, connConfig, transport;
@@ -32,7 +32,7 @@ module.exports = {
                     msg = JSON.parse(message);
                     action = msg.action;
                     eventName = msg.eventName;
-                    data = new MaggaData(msg.data);
+                    data = new Unit(msg.data);
                     if (action === 'publish'
                         && data.getContext('source') !== transport.id) {
                         if (typeof msg.eventName === 'undefined') {
@@ -64,8 +64,8 @@ module.exports = {
     publish: function (event, data) {
         var transport = this._outerTransport;
 
-        if (!(data instanceof MaggaData)) {
-            throw TypeError('data parameter doesn\'t have type of MaggaData');
+        if (!(data instanceof Unit)) {
+            throw TypeError('data parameter doesn\'t have type of Unit');
         }
 
         // Enrich _context with source

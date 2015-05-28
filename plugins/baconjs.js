@@ -1,5 +1,5 @@
 var Bacon = require('baconjs').Bacon,
-    MaggaData = require('maggaData.js');
+    Unit = require('unit.js');
 
 module.exports = {
     init: function (mediator) {
@@ -36,7 +36,7 @@ module.exports = {
                         // transforming to one object
                         // We need event to filter it
                         // Then we will take only value
-                        if (eventValue instanceof MaggaData) {
+                        if (eventValue instanceof Unit) {
                             result = {
                                 event: eventEventName,
                                 value: eventValue.getData()

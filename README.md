@@ -135,11 +135,10 @@ NODE_PATH=./src ./node_modules/.bin/browserify ./examples/sockjsChat/client/clie
 ```
 To start server part type
 ```
-NODE_PATH="./src/" node ./examples/sockjsChat/server/dummySockJsServer.js
+node ./examples/sockjsChat/server/dummySockJsServer.js
 ```
-then open `./examples/sockjsChat/client/index.html` in several browsers and type messages
+then open `http://localhost:3000/` in several browsers and type messages
 
-_Tip: to prevent Cross Origin Error use WebStorm to open `index.html` file. If you open it from `file://` use `--disable-web-security` in Chrome or similar trick for other browsers_
 
 
 

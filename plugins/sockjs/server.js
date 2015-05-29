@@ -1,4 +1,4 @@
-var Unit = require('../../src/unit.js');
+var Message = require('../../src/message.js');
 module.exports = {
     init: function (mediator) {
         var http, sockjs, config, connConfig, transport;
@@ -32,7 +32,7 @@ module.exports = {
                     msg = JSON.parse(message);
                     action = msg.action;
                     eventName = msg.eventName;
-                    data = new Unit(msg.data);
+                    data = new Message(msg.data);
                     if (action === 'publish'
                         && data.getContext('source') !== transport.id) {
                         if (typeof msg.eventName === 'undefined') {
@@ -64,8 +64,8 @@ module.exports = {
     publish: function (event, data) {
         var transport = this._outerTransport;
 
-        if (!(data instanceof Unit)) {
-            throw TypeError('data parameter doesn\'t have type of Unit');
+        if (!(data instanceof Message)) {
+            throw TypeError('data parameter doesn\'t have type of Message');
         }
 
         // Enrich _context with source

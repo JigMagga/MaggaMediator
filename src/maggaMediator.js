@@ -27,7 +27,7 @@ var DEFAULT_CONFIG = {
 //    console.log(consoleMsg);
 }(this, function () {
     var hooks = require('./hooks.js');
-    var Unit = require('./unit.js');
+    var Message = require('./message.js');
 
     function MaggaMediator(configObj) {
         // Mediator.apply(this,arguments);
@@ -112,8 +112,8 @@ var DEFAULT_CONFIG = {
         if (typeof eventName !== 'string') {
             throw new Error('Event name must be string');
         }
-        if (!(value instanceof Unit)) {
-            data = new Unit(value);
+        if (!(value instanceof Message)) {
+            data = new Message(value);
         } else {
             data = value;
         }

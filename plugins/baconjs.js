@@ -1,5 +1,5 @@
 var Bacon = require('baconjs').Bacon,
-    Unit = require('../src/unit.js');
+    Message = require('../src/message.js');
 
 module.exports = {
     init: function (mediator) {
@@ -36,7 +36,7 @@ module.exports = {
                         // transforming to one object
                         // We need event to filter it
                         // Then we will take only value
-                        if (eventValue instanceof Unit) {
+                        if (eventValue instanceof Message) {
                             result = {
                                 event: eventEventName,
                                 value: eventValue.getData()

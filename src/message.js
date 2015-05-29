@@ -1,6 +1,6 @@
-// TODO Implement Unit data envelope in a right way
+// TODO Implement Message data envelope in a right way
 
-function Unit(data) {
+function Message(data) {
     // We use _md = 1 in data to understand i
     if (typeof data === 'object' && data._u === 1) {
         this._data = data._data;
@@ -12,16 +12,16 @@ function Unit(data) {
     this._u = 1;
 }
 
-Unit.prototype.getData = function () {
+Message.prototype.getData = function () {
     return this._data;
 };
 
-Unit.prototype.getContext = function (contextKey) {
+Message.prototype.getContext = function (contextKey) {
     return this._context[contextKey];
 };
 
-Unit.prototype.setContext = function (contextKey, value) {
+Message.prototype.setContext = function (contextKey, value) {
     this._context[contextKey] = value;
 };
 
-module.exports = Unit;
+module.exports = Message;

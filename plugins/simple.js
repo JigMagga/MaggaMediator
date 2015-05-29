@@ -1,4 +1,4 @@
-var Unit = require('../src/unit.js');
+var Message = require('../src/message.js');
 module.exports = {
 
     init: function (mediator) {
@@ -59,7 +59,7 @@ module.exports = {
                 if (typeof cb !== 'function') {
                     throw new Error('Subscriber is not a function.');
                 }
-                if (value instanceof Unit) {
+                if (value instanceof Message) {
                     cb.call(transport, value.getData());
                 }
             });

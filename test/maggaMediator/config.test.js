@@ -1,6 +1,5 @@
 'use strict';
-
-var MaggaMediator = require('maggaMediator.js');
+var MaggaMediator = require('../../dist/maggaMediator.js');
 
 describe('Config', function() {
   describe('Create', function() {

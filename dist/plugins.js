@@ -50,22 +50,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	    baconjs: __webpack_require__(6),
-	    dispatcherSimple: __webpack_require__(11),
-	    eventNamesSimple: __webpack_require__(12),
-	    permissionsSimple: __webpack_require__(13),
+	    baconjs: __webpack_require__(95),
+	    dispatcherSimple: __webpack_require__(98),
+	    eventNamesSimple: __webpack_require__(99),
+	    permissionsSimple: __webpack_require__(100),
 	    simple: __webpack_require__(1),
-	    monitoring: __webpack_require__(14)
+	    monitoring: __webpack_require__(101)
 	};
 
 
 /***/ },
-/* 1 */
+
+/***/ 1:
 /***/ function(module, exports, __webpack_require__) {
 
 	var Message = __webpack_require__(2);
@@ -139,7 +141,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 2 */
+
+/***/ 2:
 /***/ function(module, exports) {
 
 	// TODO Implement Message data envelope in a right way
@@ -172,13 +175,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */
+
+/***/ 9:
+/***/ function(module, exports) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+
+/***/ 10:
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+
+/***/ 95:
 /***/ function(module, exports, __webpack_require__) {
 
-	var Bacon = __webpack_require__(7).Bacon,
+	var Bacon = __webpack_require__(96).Bacon,
 	    Message = __webpack_require__(2);
 	
 	module.exports = {
@@ -258,7 +285,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 7 */
+
+/***/ 96:
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {(function() {
@@ -3638,7 +3666,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return withDesc(new Bacon.Desc(this, "zip", [other]), Bacon.zipWith([this, other], f || Array));
 	};
 	
-	if ("function" !== "undefined" && __webpack_require__(9) !== null && __webpack_require__(10) != null) {
+	if ("function" !== "undefined" && __webpack_require__(97) !== null && __webpack_require__(10) != null) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 	    return Bacon;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3653,41 +3681,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(8)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(9)(module)))
 
 /***/ },
-/* 8 */
-/***/ function(module, exports) {
 
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-/* 9 */
+/***/ 97:
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 10 */
-/***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, {}))
-
-/***/ },
-/* 11 */
+/***/ 98:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -3728,7 +3734,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+
+/***/ 99:
 /***/ function(module, exports) {
 
 	function NestedObjects(initialObj, delimiter, includeNodes) {
@@ -3814,7 +3821,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
+
+/***/ 100:
 /***/ function(module, exports) {
 
 	var DEFAULT_SIMPLE_PERMISSIONS = {'*': true};
@@ -3919,7 +3927,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+
+/***/ 101:
 /***/ function(module, exports) {
 
 	// TODO: Functionality for monitoring. In progress.
@@ -3942,7 +3951,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }
-/******/ ])
+
+/******/ })
 });
 ;
 //# sourceMappingURL=plugins.js.map

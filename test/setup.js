@@ -2,6 +2,8 @@ sinon = require('sinon');
 chai = require('chai');
 assert = chai.assert;
 expect = chai.expect;
+MaggaMediator = require('../dist/maggaMediator.js');
+
 // we don't use should style. Expect style is recommended.
 // should = chai.should();
 

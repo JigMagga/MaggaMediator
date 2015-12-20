@@ -1,6 +1,6 @@
 'use strict';
+var MaggaMediator = require('../../dist/maggaMediator.js');
 
-var MaggaMediator = require('maggaMediator.js');
 var sockjspluginConfig = {
     plugins: {
         "sockjs": {
@@ -14,7 +14,7 @@ var sockjspluginConfig = {
     }
 };
 
-describe('connections', function () {
+describe.skip('connections', function () {
 
     describe('server', function () {
         if ((typeof (isBrowser) === 'undefined') || !isBrowser) {

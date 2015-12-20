@@ -9,7 +9,8 @@
         "define":true,
         "chai": true,
         "assert": true,
-        "expect":true
+        "expect":true,
+        "module": true,
     },
     "plugins": [],
     "ecmaFeatures": {

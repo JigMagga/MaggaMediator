@@ -50,24 +50,22 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	    baconjs: __webpack_require__(95),
-	    dispatcherSimple: __webpack_require__(98),
-	    eventNamesSimple: __webpack_require__(99),
-	    permissionsSimple: __webpack_require__(100),
+	    baconjs: __webpack_require__(7),
+	    dispatcherSimple: __webpack_require__(12),
+	    eventNamesSimple: __webpack_require__(13),
+	    permissionsSimple: __webpack_require__(14),
 	    simple: __webpack_require__(1),
-	    monitoring: __webpack_require__(101)
+	    monitoring: __webpack_require__(3)
 	};
 
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Message = __webpack_require__(2);
@@ -141,8 +139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /***/ function(module, exports) {
 
 	// TODO Implement Message data envelope in a right way
@@ -175,37 +172,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-
-/***/ 9:
+/* 3 */
 /***/ function(module, exports) {
 
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-
-/***/ 10:
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+	// TODO: Functionality for monitoring. In progress.
+	// for monitoring inspiration take a look at
+	// https://github.com/yourdelivery/JigMagga/blob/
+	// 922709fe80635d5180160bbac6271ea86bd029cf/core/mediator/mediator.js
+	// with plugins for internal communications maybe we could get rid of it
+	module.exports = {
+	    init: function () {
+	    },
+	    subscribe: function (eventName, cb) {
+	        console.log('Monitor subscribe ', eventName, cb);  // If we have this event then subscribe
+	    },
+	    unsubscribe: function (eventName, cb) {
+	        console.log('Monitor unsubscribe ', eventName, cb);
+	    },
+	    publish: function (eventName, value) {
+	        console.log('Monitor publish ', eventName, value);
+	    }
+	};
 
 /***/ },
-
-/***/ 95:
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Bacon = __webpack_require__(96).Bacon,
+	var Bacon = __webpack_require__(8).Bacon,
 	    Message = __webpack_require__(2);
 	
 	module.exports = {
@@ -285,8 +281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-
-/***/ 96:
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {(function() {
@@ -3666,7 +3661,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return withDesc(new Bacon.Desc(this, "zip", [other]), Bacon.zipWith([this, other], f || Array));
 	};
 	
-	if ("function" !== "undefined" && __webpack_require__(97) !== null && __webpack_require__(10) != null) {
+	if ("function" !== "undefined" && __webpack_require__(10) !== null && __webpack_require__(11) != null) {
 	  !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 	    return Bacon;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -3684,16 +3679,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(9)(module)))
 
 /***/ },
+/* 9 */
+/***/ function(module, exports) {
 
-/***/ 97:
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
+/* 11 */
+/***/ function(module, exports) {
 
-/***/ 98:
+	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -3734,8 +3751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-
-/***/ 99:
+/* 13 */
 /***/ function(module, exports) {
 
 	function NestedObjects(initialObj, delimiter, includeNodes) {
@@ -3821,8 +3837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-
-/***/ 100:
+/* 14 */
 /***/ function(module, exports) {
 
 	var DEFAULT_SIMPLE_PERMISSIONS = {'*': true};
@@ -3926,33 +3941,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-
-/***/ 101:
-/***/ function(module, exports) {
-
-	// TODO: Functionality for monitoring. In progress.
-	// for monitoring inspiration take a look at
-	// https://github.com/yourdelivery/JigMagga/blob/
-	// 922709fe80635d5180160bbac6271ea86bd029cf/core/mediator/mediator.js
-	// with plugins for internal communications maybe we could get rid of it
-	module.exports = {
-	    init: function () {
-	    },
-	    subscribe: function (eventName, cb) {
-	        console.log('Monitor subscribe ', eventName, cb);  // If we have this event then subscribe
-	    },
-	    unsubscribe: function (eventName, cb) {
-	        console.log('Monitor unsubscribe ', eventName, cb);
-	    },
-	    publish: function (eventName, value) {
-	        console.log('Monitor publish ', eventName, value);
-	    }
-	};
-
 /***/ }
-
-/******/ })
+/******/ ])
 });
 ;
 //# sourceMappingURL=plugins.js.map

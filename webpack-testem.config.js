@@ -10,8 +10,6 @@ module.exports = {
     externals: {
         MaggaMediator: 'MaggaMediator'
     },
-    module: {
-    },
     devServer: {
         host: 'localhost',
         port: '3000'

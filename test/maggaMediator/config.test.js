@@ -1,5 +1,6 @@
 'use strict';
-var MaggaMediator = require('../../dist/maggaMediator.js');
+var MaggaMediator = require('../../src/maggaMediator.js'),
+    simplePlugin = require('../../plugins/simple.js');
 
 describe('Config', function() {
   describe('Create', function() {
@@ -33,15 +34,15 @@ describe('Config', function() {
   describe("Loading plugins config styles",function(){
 
 
-    it("should create mediator with array-type enumeration", function(){
+//    it("should create mediator with array-type enumeration", function(){
+//      var fn = function (){
+//        return new MaggaMediator({loadPlugins:['simple']});
+//      }
+//      expect(fn).to.not.throw(Error);
+//    });
+    it("should create mediator with array of plugin objects", function(){
       var fn = function (){
-        return new MaggaMediator({loadPlugins:['simple']});
-      }
-      expect(fn).to.not.throw(Error);
-    });
-    it("should create mediator with object-type enumeration", function(){
-      var fn = function (){
-        return new MaggaMediator({plugins:{'simple':{}}});
+        return new MaggaMediator({plugins:[simplePlugin]});
       }
       expect(fn).to.not.throw(Error);
     });

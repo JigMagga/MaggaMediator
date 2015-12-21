@@ -55,7 +55,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var simplePlugin = __webpack_require__(1),
-	    monitoringPlugin = __webpack_require__(1);
+	    monitoringPlugin = __webpack_require__(3);
 	
 	var DEFAULT_CONFIG = {
 	    plugins: [simplePlugin, monitoringPlugin]
@@ -64,7 +64,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	
-	var hooks = __webpack_require__(3);
+	var hooks = __webpack_require__(4);
 	var Message = __webpack_require__(2);
 	
 	function MaggaMediator(configObj) {
@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Plugin API to register a plugin on the mediator
 	 * @type {[type]}
 	 */
-	MaggaMediator.prototype.plugin = __webpack_require__(5);
+	MaggaMediator.prototype.plugin = __webpack_require__(6);
 	// MaggaMediator.prototype._loadPlugins = require('./plugin/loadPlugins.js');
 	
 	MaggaMediator.prototype.init = function () {
@@ -298,9 +298,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	// TODO: Functionality for monitoring. In progress.
+	// for monitoring inspiration take a look at
+	// https://github.com/yourdelivery/JigMagga/blob/
+	// 922709fe80635d5180160bbac6271ea86bd029cf/core/mediator/mediator.js
+	// with plugins for internal communications maybe we could get rid of it
+	module.exports = {
+	    init: function () {
+	    },
+	    subscribe: function (eventName, cb) {
+	        console.log('Monitor subscribe ', eventName, cb);  // If we have this event then subscribe
+	    },
+	    unsubscribe: function (eventName, cb) {
+	        console.log('Monitor unsubscribe ', eventName, cb);
+	    },
+	    publish: function (eventName, value) {
+	        console.log('Monitor publish ', eventName, value);
+	    }
+	};
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventEmitter = __webpack_require__(4).EventEmitter;
+	var EventEmitter = __webpack_require__(5).EventEmitter;
 	
 	module.exports = {
 	    init: function (mediator) {
@@ -314,7 +337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -618,7 +641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/**

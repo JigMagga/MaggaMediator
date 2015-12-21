@@ -1,5 +1,5 @@
 'use strict';
-var MaggaMediator = require('../../dist/maggaMediator.js');
+var MaggaMediator = require('../../src/maggaMediator.js');
 
 var sockjspluginConfig = {
     plugins: {

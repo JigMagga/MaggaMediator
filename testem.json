@@ -1,25 +1,26 @@
 {
-  "framework": "mocha",
-  "serve_files": [ "test/bundle.js"],
-  "src_files": [
-    "dist/*",
-    "test/setup.js",
-    "test/*.test.js"
-  ],
-  "launchers": {
-    "node": {
-      "command": "NODE_PATH=./dist ./node_modules/.bin/mocha -r test/setup.js -R tap test/**/*.test.js",
-      "protocol": "tap"
-    }
-  },
-  "before_tests": "./node_modules/.bin/webpack --config webpack-testem.config.js",
-  "after_tests": "rm test/test.bundle.js",
-  "launch_in_dev": [
-    "node",
-    "chrome"
-  ],
-  "launch_in_ci": [
-    "node",
-    "phantomjs"
-  ]
+    "framework": "mocha",
+    "serve_files": [ "test/test.bundle.js"],
+    "src_files": [
+        "src/*",
+        "test/setup.js",
+        "test/index.js",
+        "test/**/*.test.js"
+    ],
+    "launchers": {
+        "node": {
+            "command": "NODE_PATH=./test ./node_modules/.bin/mocha -r test/setup.js -R tap test/**/*.test.js",
+            "protocol": "tap"
+        }
+    },
+    "before_tests": "./node_modules/.bin/webpack --config webpack-testem.config.js",
+    "after_tests": "rm -f test/test.bundle.js",
+    "launch_in_dev": [
+        "node",
+        "chrome"
+    ],
+    "launch_in_ci": [
+        "node",
+        "phantomjs"
+    ]
 }

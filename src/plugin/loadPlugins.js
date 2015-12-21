@@ -23,7 +23,6 @@
 //    // Did this because dynamically generated names doesnt work in browserify.
 //    // See more https://github.com/substack/node-browserify/issues/377
 //    pluginList.forEach(function (value) {
-//        self.plugin(require('../../plugins/simple.js'));
 //
 //        switch (value) {
 //            case 'simple':

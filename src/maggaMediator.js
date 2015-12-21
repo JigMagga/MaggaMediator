@@ -1,5 +1,5 @@
 var simplePlugin = require('../plugins/simple.js'),
-    monitoringPlugin = require('../plugins/simple.js');
+    monitoringPlugin = require('../plugins/monitoring.js');
 
 var DEFAULT_CONFIG = {
     plugins: [simplePlugin, monitoringPlugin]
